@@ -4,10 +4,10 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"net/http"
 	"os"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 //type JsonResponse struct:w
@@ -18,9 +18,18 @@ var (
 		"Test": "vagrant_test:vagrant@tcp(192.168.56.22:3306)/AllergyTest",
 		"New":  "vagrant:vagrant@tcp(192.168.56.22:3306)/AllergyNew",
 		"ae1":  "allergylocal:password@tcp(192.168.56.21:3336)/AllergyEMR",
+		"v1":   "root:Ph7urIzJ5Gp2sfev@cloudsql(allergyedgev2:us-central1:temp-entaet)/AllergyEMR",
+		"v2":   "root:Ph7urIzJ5Gp2sfev@cloudsql(allergyedgev2:us-central1:temp-entaet)/main",
 	}
 )
 
+// Connection String details:
+// * user      				 - the user created inside the DB. You can see more details on how to create it without password here:
+//               			 https://cloud.google.com/sql/docs/sql-proxy#flags
+// 										"user@cloudsql(project-id:zone:instance-name)/db-name?charset=utf8&parseTime=True&loc=UTC"
+// CLOUD SQL FORMAT  	“user@cloudsql(project-id:zone:instance-name)/db”
+//WHAT WILL GAVE ME 	-instances=allergyedgev2:us-central1:temp-entaet=tcp:3306 user: root pass: Ph7urIzJ5Gp2sfev
+//
 type PostData struct {
 	QueryString string `json:"query"`
 	DB          string `json: "db"`
@@ -30,15 +39,16 @@ func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 	var qs PostData
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&qs)
-	fmt.Println(qs.QueryString)
-	fmt.Println(qs.DB)
 	dbData := getJSON(qs.QueryString, qs.DB)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
-	resp := json.NewEncoder(w).Encode(dbData)
-	fmt.Println(resp)
-	fmt.Fprint(w, resp)
+	w.Write(dbData)
 }
+func printLog(msg string, varToLog interface{}) {
 
+	fmt.Print(msg + ": ")
+	fmt.Println(varToLog)
+}
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("USAGE: aecompare  'Name of Database you want to connect to, 'sql query wrapped in double quotes")
@@ -58,8 +68,8 @@ func checkErr(err error) {
 	}
 }
 func getJSON(sqlString string, dbConn string) []byte {
-	// db, err := sql.Open("mysql", "vagrant:vagrant@tcp(192.168.56.22:3306)/AllergyNew")
 	db, err := sql.Open("mysql", DB[dbConn])
+	printLog("the dbconn in the getJSON is", DB[dbConn])
 	checkErr(err)
 	rows, err := db.Query(sqlString)
 	if err != nil {
