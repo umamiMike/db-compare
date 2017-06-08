@@ -38,8 +38,6 @@ func printLog(msg string, varToLog interface{}) {
 }
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("USAGE: aecompare  'Name of Database you want to connect to, 'sql query wrapped in double quotes")
-		fmt.Println("Databases Names available are")
 		for key, _ := range DB {
 			fmt.Println((key))
 		}
