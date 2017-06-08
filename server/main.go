@@ -10,26 +10,13 @@ import (
 	"os"
 )
 
-//type JsonResponse struct:w
-
 var (
 	PORT = ":9099"
 	DB   = map[string]string{
-		"Test": "vagrant_test:vagrant@tcp(192.168.56.22:3306)/AllergyTest",
-		"New":  "vagrant:vagrant@tcp(192.168.56.22:3306)/AllergyNew",
-		"ae1":  "allergylocal:password@tcp(192.168.56.21:3336)/AllergyEMR",
-		"v1":   "root:Ph7urIzJ5Gp2sfev@cloudsql(allergyedgev2:us-central1:temp-entaet)/AllergyEMR",
-		"v2":   "root:Ph7urIzJ5Gp2sfev@cloudsql(allergyedgev2:us-central1:temp-entaet)/main",
+		"whichdb": "user:password@tcp(ip.to.db:3306)/DBName",
 	}
 )
 
-// Connection String details:
-// * user      				 - the user created inside the DB. You can see more details on how to create it without password here:
-//               			 https://cloud.google.com/sql/docs/sql-proxy#flags
-// 										"user@cloudsql(project-id:zone:instance-name)/db-name?charset=utf8&parseTime=True&loc=UTC"
-// CLOUD SQL FORMAT  	“user@cloudsql(project-id:zone:instance-name)/db”
-//WHAT WILL GAVE ME 	-instances=allergyedgev2:us-central1:temp-entaet=tcp:3306 user: root pass: Ph7urIzJ5Gp2sfev
-//
 type PostData struct {
 	QueryString string `json:"query"`
 	DB          string `json: "db"`
