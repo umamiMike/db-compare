@@ -1,3 +1,15 @@
+/**
+TODO: convert the db map to an external file
+change to parse that db file before any query attempt
+so no need to restart.
+TODO: ability to save slice of maps to external file
+/config/save
+will save the current config slice to an external file
+/config/view
+shows a web page of the current config
+TODO: add option to start server with config file
+EX: dbcompare --config /path/to/configfilename.ext
+*/
 package main
 
 import (
@@ -95,4 +107,24 @@ func getJSON(sqlString string, dbConn string) []byte {
 	}
 	db.Close()
 	return jsonData
+}
+
+func SaveLinkAsJson(l LinkInfo, dir string) {
+	if _, err := os.Stat(dir); err != nil {
+		if os.IsNotExist(err) {
+			os.Mkdir(dir, 0755)
+		} else {
+			log.Println(err)
+		}
+	}
+
+	path := fmt.Sprint(dir, url.QueryEscape(l.Link))
+	os.Remove(path)
+
+	b, err := json.Marshal(l)
+	if err != nil {
+		log.Println(err)
+	}
+
+	ioutil.WriteFile(path, b, 0644)
 }
