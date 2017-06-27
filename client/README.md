@@ -1,4 +1,4 @@
-# aecompare
+# DB-Compare
 A web interface for querying a database.  
 
 
