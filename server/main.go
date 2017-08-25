@@ -17,7 +17,9 @@ import (
 	"encoding/json"
 	"fmt"
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/mysql"
+	//	"github.com/davecgh/go-spew/spew"
 	_ "github.com/go-sql-driver/mysql"
+	"io/ioutil"
 	"net/http"
 	"os"
 )
@@ -34,40 +36,59 @@ type PostData struct {
 	DB          string `json: "db"`
 }
 
+//call this function as a part of the process of finding what database to connect to
+//will return a map of [string]strings
+func getConn(cname string) string {
+	data, err := ioutil.ReadFile("data.json")
+	type Conf struct {
+		Dbs []map[string]string
+	}
+	conns := &Conf{}
+	json.Unmarshal(data, &conns)
+	if err != nil {
+		fmt.Println("in getConn", err)
+	}
+	var thisconn string
+	for i, num := range conns.Dbs {
+		fmt.Println(i, num)
+		for k, v := range num {
+			if k == cname {
+				fmt.Println("key:", k, "\n", v)
+				thisconn = v
+			}
+		}
+	}
+	return thisconn
+}
+
 func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 	var qs PostData
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&qs)
-	dbData := getJSON(qs.QueryString, qs.DB)
+	db := getConn(qs.DB)
+
+	fmt.Println("the db is:", db)
+	dbData := getJSON(qs.QueryString, db)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(dbData)
 }
-func printLog(msg string, varToLog interface{}) {
 
-	fmt.Print(msg + ": ")
-	fmt.Println(varToLog)
-}
 func main() {
 	if len(os.Args) < 2 {
 		for key, _ := range DB {
 			fmt.Println((key))
 		}
-
 	}
 	fmt.Println("running server on " + PORT)
 	http.HandleFunc("/", jsonResponseHandler)
 	http.ListenAndServe(PORT, nil)
 }
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
 func getJSON(sqlString string, dbConn string) []byte {
-	db, err := sql.Open("mysql", DB[dbConn])
-	printLog("the dbconn in the getJSON is", DB[dbConn])
-	checkErr(err)
+	db, err := sql.Open("mysql", dbConn)
+	if err != nil {
+		fmt.Println("in getJSON", err)
+	}
 	rows, err := db.Query(sqlString)
 	if err != nil {
 		var mt []byte
@@ -102,29 +123,10 @@ func getJSON(sqlString string, dbConn string) []byte {
 		}
 		tableData = append(tableData, entry)
 	}
-	jsonData, err := json.MarshalIndent(tableData, "", "  ")
-	if err != nil {
-	}
 	db.Close()
-	return jsonData
-}
+	jsonData, err := json.MarshalIndent(tableData, "", "  ")
 
-func SaveLinkAsJson(l LinkInfo, dir string) {
-	if _, err := os.Stat(dir); err != nil {
-		if os.IsNotExist(err) {
-			os.Mkdir(dir, 0755)
-		} else {
-			log.Println(err)
-		}
-	}
-
-	path := fmt.Sprint(dir, url.QueryEscape(l.Link))
-	os.Remove(path)
-
-	b, err := json.Marshal(l)
 	if err != nil {
-		log.Println(err)
 	}
-
-	ioutil.WriteFile(path, b, 0644)
+	return jsonData
 }
