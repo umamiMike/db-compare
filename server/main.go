@@ -68,9 +68,12 @@ func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 	db := getConn(qs.DB)
 
 	fmt.Println("the db is:", db)
-	dbData := getJSON(qs.QueryString, db)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
+	dbData, err := getJSON(qs.QueryString, db)
+	if err != nil {
+		w.Write([]byte(err.Error()))
+	}
 	w.Write(dbData)
 }
 
@@ -84,21 +87,21 @@ func main() {
 	http.HandleFunc("/", jsonResponseHandler)
 	http.ListenAndServe(PORT, nil)
 }
-func getJSON(sqlString string, dbConn string) []byte {
+
+func getJSON(sqlString string, dbConn string) ([]byte, error) {
 	db, err := sql.Open("mysql", dbConn)
+	var mt []byte
 	if err != nil {
-		fmt.Println("in getJSON", err)
+		return mt, err
 	}
 	rows, err := db.Query(sqlString)
 	if err != nil {
-		var mt []byte
-		return mt
+		return mt, err
 	}
 	defer rows.Close()
 	columns, err := rows.Columns()
 	if err != nil {
-		var mt []byte
-		return mt
+		return mt, err
 	}
 	count := len(columns)
 	tableData := make([]map[string]interface{}, 0)
@@ -125,8 +128,8 @@ func getJSON(sqlString string, dbConn string) []byte {
 	}
 	db.Close()
 	jsonData, err := json.MarshalIndent(tableData, "", "  ")
-
 	if err != nil {
+		return mt, err
 	}
-	return jsonData
+	return jsonData, err
 }
