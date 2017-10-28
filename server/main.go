@@ -25,15 +25,15 @@ import (
 )
 
 var (
-	PORT = ":9099"
-	DB   = map[string]string{
+	PORT  = ":9099"
+	DbKey = map[string]string{
 		"whichdb": "user:password@tcp(ip.to.db:3306)/DBName",
 	}
 )
 
 type PostData struct {
 	QueryString string `json:"query"`
-	DB          string `json: "db"`
+	DbKey       string `json: "db"`
 }
 
 //call this function as a part of the process of finding what database to connect to
@@ -41,7 +41,8 @@ type PostData struct {
 func getConn(cname string) string {
 	data, err := ioutil.ReadFile("data.json")
 	type Conf struct {
-		Dbs []map[string]string
+		Dbs  []map[string]string
+		Port []map[string]string
 	}
 	conns := &Conf{}
 	json.Unmarshal(data, &conns)
@@ -65,7 +66,7 @@ func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 	var qs PostData
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&qs)
-	db := getConn(qs.DB)
+	db := getConn(qs.DbKey)
 
 	fmt.Println("the db is:", db)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -79,7 +80,7 @@ func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	if len(os.Args) < 2 {
-		for key, _ := range DB {
+		for key, _ := range DbKey {
 			fmt.Println((key))
 		}
 	}

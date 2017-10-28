@@ -1,6 +1,7 @@
 { "dbs": 
   [	
     { "db1":  "user:password@tcp(127.0.0.1:3306)/dbName"},
-    { "db1":  "user:password@tcp(127.0.0.1:3306)/dbName2"}
+    { "db1":  "user:password@tcp(127.0.0.1:3306)/dbName2"},
+    { "cloudsql": "user:pwrd@cloudsql(instancename:PORT)/dbName"}
   ]
 }
