@@ -21,14 +21,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"net/http"
-	"os"
+	//	"os"
 )
 
 var (
-	PORT  = ":9099"
-	DbKey = map[string]string{
-		"whichdb": "user:password@tcp(ip.to.db:3306)/DBName",
-	}
+	PORT = ":9099"
 )
 
 type PostData struct {
@@ -50,22 +47,22 @@ func getConn(cname string) string {
 		fmt.Println("in getConn", err)
 	}
 	var thisconn string
-	for i, num := range conns.Dbs {
-		fmt.Println(i, num)
+	for _, num := range conns.Dbs {
 		for k, v := range num {
 			if k == cname {
-				fmt.Println("key:", k, "\n", v)
 				thisconn = v
 			}
 		}
 	}
+	fmt.Println("i am inside the getConn function", thisconn)
 	return thisconn
 }
 
-func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
+func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var qs PostData
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&qs)
+	fmt.Println("in the index handler, and the db key is:", qs.DbKey)
 	db := getConn(qs.DbKey)
 
 	fmt.Println("the db is:", db)
@@ -79,13 +76,10 @@ func jsonResponseHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		for key, _ := range DbKey {
-			fmt.Println((key))
-		}
-	}
+	//	if len(os.Args) < 2 {
+	//	}
 	fmt.Println("running server on " + PORT)
-	http.HandleFunc("/", jsonResponseHandler)
+	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(PORT, nil)
 }
 
