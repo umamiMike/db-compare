@@ -20,11 +20,13 @@ export default {
 };
 </script>
 <style>
+@import url('https://fonts.googleapis.com/css?family=Nova+Mono');
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Nova Mono', monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 
 }
+input {font-family: inherit;}
 </style>
