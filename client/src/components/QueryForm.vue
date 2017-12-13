@@ -19,7 +19,7 @@
                 <label>
                   Query String<span class="req">*</span>
                 </label>
-                <textarea type="multiline" cols="40" rows="5" v-model="querystring" size="200" placeholder="Describe Users"/>
+                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-model="querystring" size="200" placeholder="Describe Users"/>
             <button v-on:click="makequery">make query to db</button>
               </div>
             </div>
@@ -27,6 +27,7 @@
         </div>
       </div><!-- tab-content -->
     </div> <!-- /form -->
+    <div class ="tablecontainer">
     <table>
       <tr class="header">
         <th v-for="header in columns">
@@ -38,6 +39,7 @@
     <h2 v-on:click="addToQueryString(fielddata, $event)"> {{ fielddata }} </h2>
         </td></tr>
     </table>
+    </div>
   </div>
 </template>
 
@@ -99,7 +101,6 @@ export default {
           this.rowdata = parsedArray
         })
         .catch(function(error){
-          console.log(error);
         });
     },
   },
@@ -130,7 +131,6 @@ button {
 }
 input {
 width: 25%;
-height: 30px;
   float: left;
 }
 form{
@@ -138,25 +138,25 @@ margin: auto;
 width: 50%;
 }
 label{
-font-size: 1.0em;
   float: left;
 }
-
+.queryinput {
+       background: rgb(240,240,240); 
+        font-family:inherit;
+        margin: 16px;
+        padding: 16px;
+}
 .field-checklist .wrapper {
-	width: 100%;
+}
+.tablecontainer {
+height: 400px;
+  overflow: scroll;
 }
 table{
-width: 90%;
-max-height: 400px;
-  overflow: auto;
 }
 th {
-font-weight: bold;
 }
 tr:nth-child(even){
 background:#cdcccc;
-}
-.hello{
-  font-size:0.8em;
 }
 </style>
