@@ -21,22 +21,17 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"net/http"
-	//	"os"
+	"os"
 )
 
 var (
 	PORT = ":9099"
 )
 
-type PostData struct {
-	QueryString string `json:"query"`
-	DbKey       string `json: "db"`
-}
-
 //call this function as a part of the process of finding what database to connect to
 //will return a map of [string]strings
-func getConn(cname string) string {
-	data, err := ioutil.ReadFile("data.json")
+func getConn(cname string, f string) (string, error) {
+	data, err := ioutil.ReadFile(f)
 	type Conf struct {
 		Dbs  []map[string]string
 		Port []map[string]string
@@ -55,20 +50,30 @@ func getConn(cname string) string {
 		}
 	}
 	fmt.Println("i am inside the getConn function", thisconn)
-	return thisconn
+	return thisconn, err
+}
+
+type PostData struct {
+	QueryString string `json:"query"`
+	DbKey       string `json:"db"`
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	var qs PostData
+	var pd PostData
 	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&qs)
-	fmt.Println("in the index handler, and the db key is:", qs.DbKey)
-	db := getConn(qs.DbKey)
+	decoder.Decode(&pd)
+	//spew.Dump(pd)
+	fmt.Println("in the index handler, and the db key is:", pd.DbKey)
 
+	db, err := getConn(pd.DbKey, os.Args[1])
+	if err != nil {
+
+		fmt.Println("in index handler, fail to getConn", err)
+	}
 	fmt.Println("the db is:", db)
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
-	dbData, err := getJSON(qs.QueryString, db)
+	dbData, err := getJSON(pd.QueryString, db)
 	if err != nil {
 		w.Write([]byte(err.Error()))
 	}
@@ -76,8 +81,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	//	if len(os.Args) < 2 {
-	//	}
+	if len(os.Args) < 2 {
+		fmt.Println("no config supplied")
+		return
+	}
 	fmt.Println("running server on " + PORT)
 	http.HandleFunc("/", indexHandler)
 	http.ListenAndServe(PORT, nil)
