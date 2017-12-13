@@ -1,5 +1,5 @@
 {
-  "name": "jwt_demo_client",
+  "name": "multi_db_query",
   "version": "1.0.0",
   "description": "A small front end app to test the authentication process",
   "author": "Mike Chastain <michaelwchastain@gmail.com>",
