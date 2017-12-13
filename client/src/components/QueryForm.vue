@@ -42,9 +42,9 @@
 </template>
 
 <script>
-const config = {
-  endpoint: 'http://localhost:9099',
-};
+  const config = {
+    endpoint: 'http://localhost:9099',
+  };
 export default {
   name: 'QueryForm',
   data() {
@@ -77,24 +77,30 @@ export default {
           method: 'POST',
           body: JSON.stringify(payload)
         })
-      .then(function (response) {
-        return response.json();
-      })
+        .then(function (response) {
+          if (!response.ok){ 
+            throw Error(response.statusText);
+          }
+          return response
+        })
+        .then(function (response) {
+          console.log(response.ok);
+          return response.json();
+        })
         .then((data) => {
           this.rowdata = data
           return data;
-      })
+        })
         .then((data) => {
-          console.log(data)
           this.columns = Object.keys(data[0])
           var parsedArray = data.map(function(row){
-          return Object.values(row);
+            return Object.values(row);
           }) 
           this.rowdata = parsedArray
         })
         .catch(function(error){
-        console.log("error", error)
-      });
+          console.log(error);
+        });
     },
   },
 };
