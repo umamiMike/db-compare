@@ -13,71 +13,30 @@ EX: dbcompare --config /path/to/configfilename.ext
 package main
 
 import (
+	"crypto/rand"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/mysql"
-	//	"github.com/davecgh/go-spew/spew"
+	// "github.com/davecgh/go-spew/spew"
 	_ "github.com/go-sql-driver/mysql"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
 )
 
-var (
-	PORT = ":9099"
-)
-
-//call this function as a part of the process of finding what database to connect to
-//will return a map of [string]strings
-func getConn(cname string, f string) (string, error) {
-	data, err := ioutil.ReadFile(f)
-	type Conf struct {
-		Dbs  []map[string]string
-		Port []map[string]string
-	}
-	conns := &Conf{}
-	json.Unmarshal(data, &conns)
-	if err != nil {
-		fmt.Println("in getConn", err)
-	}
-	var thisconn string
-	for _, num := range conns.Dbs {
-		for k, v := range num {
-			if k == cname {
-				thisconn = v
-			}
-		}
-	}
-	fmt.Println("i am inside the getConn function", thisconn)
-	return thisconn, err
+/** call this function as a part of the process of finding what database to connect to
+* will return a map of [string]strings
+searches config json in dbs function
+*/
+type conf struct {
+	Dbs         []map[string]string `json:"dbs"`
+	Server_port string              `json:"server_port"`
 }
-
-type PostData struct {
+type requestJson struct {
 	QueryString string `json:"query"`
 	DbKey       string `json:"db"`
-}
-
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	var pd PostData
-	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&pd)
-	//spew.Dump(pd)
-	fmt.Println("in the index handler, and the db key is:", pd.DbKey)
-
-	db, err := getConn(pd.DbKey, os.Args[1])
-	if err != nil {
-
-		fmt.Println("in index handler, fail to getConn", err)
-	}
-	fmt.Println("the db is:", db)
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
-	dbData, err := getJSON(pd.QueryString, db)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-	}
-	w.Write(dbData)
+	Token       string `json:"token"`
 }
 
 func main() {
@@ -85,25 +44,86 @@ func main() {
 		fmt.Println("no config supplied")
 		return
 	}
-	fmt.Println("running server on " + PORT)
+	var cn conf
+	cn.get(os.Args[1])
 	http.HandleFunc("/", indexHandler)
-	http.ListenAndServe(PORT, nil)
+	http.ListenAndServe(":"+cn.Server_port, nil)
 }
 
-func getJSON(sqlString string, dbConn string) ([]byte, error) {
-	db, err := sql.Open("mysql", dbConn)
-	var mt []byte
+func (c *conf) get(f string) {
+	fc, err := os.Open(f)
+	defer fc.Close()
+	decoder := json.NewDecoder(fc)
+	decoder.Decode(&c)
 	if err != nil {
-		return mt, err
+		fmt.Println("in getConf", err)
+	}
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("I am in the fn index handler")
+	var pd requestJson
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&pd)
+
+	var uuid = ""
+	if len(pd.Token) <= 0 {
+		uuid, _ = newUUID()
+	}
+	var cn conf
+	cn.get(os.Args[1])
+	var theconn = ""
+	for _, v := range cn.Dbs {
+		val, ok := v[pd.DbKey]
+		if ok {
+			theconn = val
+		}
+	}
+	datachannel := make(chan []map[string]interface{})
+	errorchan := make(chan error)
+
+	go getJSON(datachannel, errorchan, pd.QueryString, theconn)
+
+	select {
+
+	case error := <-errorchan:
+		fmt.Println(error, "will need to return an error")
+
+	case message := <-datachannel:
+
+		messageStruct := struct {
+			Token string                   `json:"token"`
+			Dat   []map[string]interface{} `json: "dat"`
+		}{
+			uuid,
+			message,
+		}
+
+		jsonData, err := json.MarshalIndent(messageStruct, "", "  ")
+
+		if err != nil {
+			fmt.Println(err)
+
+		}
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
+	}
+
+}
+func getJSON(data chan []map[string]interface{}, errorchan chan error, sqlString string, dbConn string) {
+	db, err := sql.Open("mysql", dbConn)
+	if err != nil {
+		errorchan <- err
 	}
 	rows, err := db.Query(sqlString)
 	if err != nil {
-		return mt, err
+		errorchan <- err
 	}
 	defer rows.Close()
 	columns, err := rows.Columns()
 	if err != nil {
-		return mt, err
+		errorchan <- err
 	}
 	count := len(columns)
 	tableData := make([]map[string]interface{}, 0)
@@ -129,9 +149,21 @@ func getJSON(sqlString string, dbConn string) ([]byte, error) {
 		tableData = append(tableData, entry)
 	}
 	db.Close()
-	jsonData, err := json.MarshalIndent(tableData, "", "  ")
 	if err != nil {
-		return mt, err
+		errorchan <- err
 	}
-	return jsonData, err
+	data <- tableData // writing the jsonData  to the data channel
+}
+
+func newUUID() (string, error) {
+	uuid := make([]byte, 16)
+	n, err := io.ReadFull(rand.Reader, uuid)
+	if n != len(uuid) || err != nil {
+		return "", err
+	}
+	// variant bits; see section 4.1.1
+	uuid[8] = uuid[8]&^0xc0 | 0x80
+	// version 4 (pseudo-random); see section 4.1.3
+	uuid[6] = uuid[6]&^0xf0 | 0x40
+	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
 }

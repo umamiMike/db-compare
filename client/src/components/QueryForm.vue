@@ -94,8 +94,8 @@ export default {
           return data;
         })
         .then((data) => {
-          this.columns = Object.keys(data[0])
-          var parsedArray = data.map(function(row){
+          this.columns = Object.keys(data.Dat[0])
+          var parsedArray = data.Dat.map(function(row){
             return Object.values(row);
           }) 
           this.rowdata = parsedArray
