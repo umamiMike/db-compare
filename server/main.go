@@ -79,6 +79,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			theconn = val
 		}
 	}
+	fmt.Println(theconn)
+	//os.Exit(1)
 	datachannel := make(chan []map[string]interface{})
 	errorchan := make(chan error)
 
@@ -87,6 +89,22 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	select {
 
 	case error := <-errorchan:
+		errorStruct := struct {
+			Token string `json:"token"`
+			Dat   string `json: "err"`
+		}{
+			uuid,
+			error.Error(),
+		}
+		jsonData, err := json.MarshalIndent(errorStruct, "", "  ")
+
+		if err != nil {
+			fmt.Println(err)
+
+		}
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(jsonData)
 		fmt.Println(error, "will need to return an error")
 
 	case message := <-datachannel:
@@ -119,6 +137,7 @@ func getJSON(data chan []map[string]interface{}, errorchan chan error, sqlString
 	rows, err := db.Query(sqlString)
 	if err != nil {
 		errorchan <- err
+		return
 	}
 	defer rows.Close()
 	columns, err := rows.Columns()
@@ -151,6 +170,7 @@ func getJSON(data chan []map[string]interface{}, errorchan chan error, sqlString
 	db.Close()
 	if err != nil {
 		errorchan <- err
+		return
 	}
 	data <- tableData // writing the jsonData  to the data channel
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-  <div v-for="query in previousqueries">
-    <button v-on:click="replacequerystring(query.query, $event)">query is: {{ query.query }} </button>
+  <div id="replacequery_cont" v-for="query in previousqueries">
+    <button class="replacequery" v-on:click="replacequerystring(query.query, $event)">query is: {{ query.query }} </button>
   </div>
     <h1>{{ msg }}</h1>
     <div class="form">
@@ -13,13 +13,13 @@
                 <label>
                   Database <span class="req" >*</span>
                 </label>
-                <input type="text" v-model="dbname" placeholder="ae1"/>
+                <input type="text" v-model="dbname" placeholder="ae1">
               </div>
               <div class="field-wrap">
                 <label>
                   Query String<span class="req">*</span>
                 </label>
-                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-model="querystring" size="200" placeholder="Describe Users"/>
+                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-on:click="saveCursor" v-on:keyup="saveCursor" v-model="querystring" size="200" placeholder="Describe Users">show tables </textarea>
             <button v-on:click="makequery">make query to db</button>
               </div>
             </div>
@@ -51,18 +51,27 @@ export default {
   name: 'QueryForm',
   data() {
     return {
-      querystring: '',
+      querystring: 'show tables',
+      querypos: 0,
       msg: 'Query Form at your service',
-      dbname: '',
+      dbname: 'new',
       columns: [],
       rowdata: [], 
       dbs: ['ae1','New','Test'],
       previousqueries: []
     };
   },
+
   methods: {
+    saveCursor: function (event) {
+      this.querypos =  event.target.selectionStart
+      let se = event.target.selectionEnd
+
+    },
     addToQueryString: function (newVal,event) {
-      this.querystring += " " + newVal
+      let astr = this.querystring.substr(0,this.querypos)
+      let cstr = this.querystring.substr(this.querypos)
+      this.querystring = astr + newVal + cstr
     },
     replacequerystring: function (newVal,event) {
       this.querystring =  newVal
@@ -140,11 +149,27 @@ width: 50%;
 label{
   float: left;
 }
+#replacequery_cont{
+        float:none;
+
+}
+.replacequery{
+float: left;
+padding: 4px;
+margin: 4px;
+}
+
 .queryinput {
        background: rgb(240,240,240); 
         font-family:inherit;
         margin: 16px;
         padding: 16px;
+}
+.header {
+  padding: 16px;
+  margin: 0px;
+  border: 2px;
+  border-color: black;
 }
 .field-checklist .wrapper {
 }
