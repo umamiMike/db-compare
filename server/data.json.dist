@@ -1,7 +1,13 @@
-{ "dbs": 
-  [	
-    { "db1":  "user:password@tcp(127.0.0.1:3306)/dbName"},
-    { "db1":  "user:password@tcp(127.0.0.1:3306)/dbName2"},
-    { "cloudsql": "user:pwrd@cloudsql(instancename:PORT)/dbName"}
+{ 
+  "server_port": "8080", 
+  "dbs": [	
+    {
+      "name":"keyToEnterFromDatabaseFieldInQueryForm",
+      "conn":  "user:password@tcp(hostname:dbportnumber)/DbName"
+    },
+    {
+      "name":"another",
+      "conn":  "anotherconn"
+    }
   ]
 }

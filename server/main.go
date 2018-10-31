@@ -1,4 +1,7 @@
 /**
+TODO: containerize this mess so its easy to deploy the front and back end.
+TODO: add a ping for all current configs, which
+*     denotes the connection health of your configed databases
 TODO: convert the db map to an external file
 change to parse that db file before any query attempt
 so no need to restart.
@@ -25,14 +28,16 @@ import (
 	"os"
 )
 
-/** call this function as a part of the process of finding what database to connect to
-* will return a map of [string]strings
-searches config json in dbs function
-*/
 type conf struct {
-	Dbs         []map[string]string `json:"dbs"`
-	Server_port string              `json:"server_port"`
+	Dbs         []conndata `json:"dbs"`
+	Server_port string     `json:"server_port"`
 }
+
+type conndata struct {
+	Name string `json:"name"`
+	Conn string `json:"conn"`
+}
+
 type requestJson struct {
 	QueryString string `json:"query"`
 	DbKey       string `json:"db"`
@@ -44,6 +49,7 @@ func main() {
 		fmt.Println("no config supplied")
 		return
 	}
+	fmt.Println("service started")
 	var cn conf
 	cn.get(os.Args[1])
 	http.HandleFunc("/", indexHandler)
@@ -61,11 +67,9 @@ func (c *conf) get(f string) {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("I am in the fn index handler")
 	var pd requestJson
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&pd)
-
 	var uuid = ""
 	if len(pd.Token) <= 0 {
 		uuid, _ = newUUID()
@@ -73,21 +77,18 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var cn conf
 	cn.get(os.Args[1])
 	var theconn = ""
+
 	for _, v := range cn.Dbs {
-		val, ok := v[pd.DbKey]
-		if ok {
-			theconn = val
+		if v.Name == pd.DbKey {
+			theconn = v.Conn
 		}
 	}
 	fmt.Println(theconn)
 	//os.Exit(1)
 	datachannel := make(chan []map[string]interface{})
 	errorchan := make(chan error)
-
 	go getJSON(datachannel, errorchan, pd.QueryString, theconn)
-
 	select {
-
 	case error := <-errorchan:
 		errorStruct := struct {
 			Token string `json:"token"`
@@ -106,9 +107,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(jsonData)
 		fmt.Println(error, "will need to return an error")
-
 	case message := <-datachannel:
-
 		messageStruct := struct {
 			Token string                   `json:"token"`
 			Dat   []map[string]interface{} `json: "dat"`
@@ -116,12 +115,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			uuid,
 			message,
 		}
-
 		jsonData, err := json.MarshalIndent(messageStruct, "", "  ")
-
 		if err != nil {
 			fmt.Println(err)
-
 		}
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
