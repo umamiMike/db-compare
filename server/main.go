@@ -43,6 +43,13 @@ type requestJson struct {
 	DbKey       string `json:"db"`
 	Token       string `json:"token"`
 }
+type myRespWriter struct {
+	http.ResponseWriter
+}
+
+func (w *myRespWriter) writeHeader() {
+
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -66,7 +73,18 @@ func (c *conf) get(f string) {
 	}
 }
 
+func setHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+}
+func (w *LogResponseWritter) WriteHeader(statusCode int) {
+
+	w.status = statusCode
+	w.ResponseWriter.WriteHeader(statusCode)
+}
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+
+	setHeaders(w)
 	var pd requestJson
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&pd)
@@ -103,8 +121,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println(err)
 
 		}
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
 		w.Write(jsonData)
 		fmt.Println(error, "will need to return an error")
 	case message := <-datachannel:
@@ -119,8 +135,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Content-Type", "application/json")
 		w.Write(jsonData)
 	}
 
