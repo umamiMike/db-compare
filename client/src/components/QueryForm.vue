@@ -4,7 +4,7 @@
     <button class="replacequery" v-on:click="replacequerystring(query.query, $event)">query is: {{ query.query }} </button>
   </div>
     <h1>{{ msg }}</h1>
-    <div class="form">
+    <div id="someform" class="form">
       <div class="tab-content">
         <div id="signup">   
           <form>

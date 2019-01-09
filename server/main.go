@@ -1,29 +1,11 @@
-/**
-TODO: containerize this mess so its easy to deploy the front and back end.
-TODO: add a ping for all current configs, which
-*     denotes the connection health of your configed databases
-TODO: convert the db map to an external file
-change to parse that db file before any query attempt
-so no need to restart.
-TODO: ability to save slice of maps to external file
-/config/save
-will save the current config slice to an external file
-/config/view
-shows a web page of the current config
-TODO: add option to start server with config file
-EX: dbcompare --config /path/to/configfilename.ext
-*/
 package main
 
 import (
-	"crypto/rand"
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	_ "github.com/GoogleCloudPlatform/cloudsql-proxy/proxy/dialers/mysql"
 	// "github.com/davecgh/go-spew/spew"
 	_ "github.com/go-sql-driver/mysql"
-	"io"
 	"net/http"
 	"os"
 )
@@ -38,15 +20,19 @@ type conndata struct {
 	Conn string `json:"conn"`
 }
 
-type requestJson struct {
-	QueryString string `json:"query"`
-	DbKey       string `json:"db"`
-	Token       string `json:"token"`
-}
 type myRespWriter struct {
 	http.ResponseWriter
 }
 
+func (c *conf) get(f string) {
+	fc, err := os.Open(f)
+	defer fc.Close()
+	decoder := json.NewDecoder(fc)
+	decoder.Decode(&c)
+	if err != nil {
+		fmt.Println("in getConf", err)
+	}
+}
 func (w *myRespWriter) writeHeader() {
 
 }
@@ -63,25 +49,22 @@ func main() {
 	http.ListenAndServe(":"+cn.Server_port, nil)
 }
 
-func (c *conf) get(f string) {
-	fc, err := os.Open(f)
-	defer fc.Close()
-	decoder := json.NewDecoder(fc)
-	decoder.Decode(&c)
-	if err != nil {
-		fmt.Println("in getConf", err)
-	}
-}
-
 func setHeaders(w http.ResponseWriter) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json")
 }
-func (w *LogResponseWritter) WriteHeader(statusCode int) {
 
-	w.status = statusCode
-	w.ResponseWriter.WriteHeader(statusCode)
+type requestJson struct {
+	QueryString string `json:"query"`
+	DbKey       string `json:"db"`
+	Token       string `json:"token"`
 }
+
+//func (w *LogResponseWritter) WriteHeader(statusCode int) {
+
+//w.status = statusCode
+//w.ResponseWriter.WriteHeader(statusCode)
+//}
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	setHeaders(w)
@@ -105,7 +88,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	//os.Exit(1)
 	datachannel := make(chan []map[string]interface{})
 	errorchan := make(chan error)
-	go getJSON(datachannel, errorchan, pd.QueryString, theconn)
+	go getFromDb(datachannel, errorchan, pd.QueryString, theconn)
+
 	select {
 	case error := <-errorchan:
 		errorStruct := struct {
@@ -122,7 +106,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		}
 		w.Write(jsonData)
-		fmt.Println(error, "will need to return an error")
 	case message := <-datachannel:
 		messageStruct := struct {
 			Token string                   `json:"token"`
@@ -138,62 +121,4 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonData)
 	}
 
-}
-func getJSON(data chan []map[string]interface{}, errorchan chan error, sqlString string, dbConn string) {
-	db, err := sql.Open("mysql", dbConn)
-	if err != nil {
-		errorchan <- err
-	}
-	rows, err := db.Query(sqlString)
-	if err != nil {
-		errorchan <- err
-		return
-	}
-	defer rows.Close()
-	columns, err := rows.Columns()
-	if err != nil {
-		errorchan <- err
-	}
-	count := len(columns)
-	tableData := make([]map[string]interface{}, 0)
-	values := make([]interface{}, count)
-	valuePtrs := make([]interface{}, count)
-	for rows.Next() {
-		for i := 0; i < count; i++ {
-			valuePtrs[i] = &values[i]
-		}
-		rows.Scan(valuePtrs...)
-		entry := make(map[string]interface{})
-		for i, col := range columns {
-			var v interface{}
-			val := values[i]
-			b, ok := val.([]byte)
-			if ok {
-				v = string(b)
-			} else {
-				v = val
-			}
-			entry[col] = v
-		}
-		tableData = append(tableData, entry)
-	}
-	db.Close()
-	if err != nil {
-		errorchan <- err
-		return
-	}
-	data <- tableData // writing the jsonData  to the data channel
-}
-
-func newUUID() (string, error) {
-	uuid := make([]byte, 16)
-	n, err := io.ReadFull(rand.Reader, uuid)
-	if n != len(uuid) || err != nil {
-		return "", err
-	}
-	// variant bits; see section 4.1.1
-	uuid[8] = uuid[8]&^0xc0 | 0x80
-	// version 4 (pseudo-random); see section 4.1.3
-	uuid[6] = uuid[6]&^0xf0 | 0x40
-	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
 }
