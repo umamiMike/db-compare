@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <h3>Querying multiple DBS and showing response on a table</h3>
-    
+
     <div class="container">
-      <QueryForm></QueryForm>
       <QueryForm></QueryForm>
     </div>
   </div>

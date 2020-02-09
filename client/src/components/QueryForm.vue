@@ -6,7 +6,7 @@
     <h1>{{ msg }}</h1>
     <div id="someform" class="form">
       <div class="tab-content">
-        <div id="signup">   
+        <div id="signup">
           <form>
             <div class="top-row">
               <div class="field-wrap">
@@ -32,7 +32,7 @@
       <tr class="header">
         <th v-for="header in columns">
            <h2 v-on:click="addToQueryString(header, $event)"> {{ header }} </h2>
-        </th>  
+        </th>
       </tr>
       <tr v-for="row in rowdata">
         <td v-for="fielddata in row">
@@ -56,7 +56,7 @@ export default {
       msg: 'Query Form at your service',
       dbname: 'new',
       columns: [],
-      rowdata: [], 
+      rowdata: [],
       dbs: ['ae1','New','Test'],
       previousqueries: []
     };
@@ -69,6 +69,7 @@ export default {
 
     },
     addToQueryString: function (newVal,event) {
+
       let astr = this.querystring.substr(0,this.querypos)
       let cstr = this.querystring.substr(this.querypos)
       this.querystring = astr + newVal + cstr
@@ -89,13 +90,13 @@ export default {
           body: JSON.stringify(payload)
         })
         .then(function (response) {
-          if (!response.ok){ 
+          if (!response.ok){
             throw Error(response.statusText);
           }
           return response
         })
         .then(function (response) {
-          console.log(response.ok);
+
           return response.json();
         })
         .then((data) => {
@@ -103,10 +104,12 @@ export default {
           return data;
         })
         .then((data) => {
-          this.columns = Object.keys(data.Dat[0])
-          var parsedArray = data.Dat.map(function(row){
+        console.log(data)
+          this.columns = Object.keys(data.Data[0])
+          var parsedArray = data.Data.map(function(row){
+
             return Object.values(row);
-          }) 
+          })
           this.rowdata = parsedArray
         })
         .catch(function(error){
@@ -160,7 +163,7 @@ margin: 4px;
 }
 
 .queryinput {
-       background: rgb(240,240,240); 
+       background: rgb(240,240,240);
         font-family:inherit;
         margin: 16px;
         padding: 16px;
