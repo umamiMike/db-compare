@@ -78,7 +78,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Println(err)
 	//}
 
-	rawdat, _ := csvThatShit()
+	rawdat, _ := csvThatStuff()
 	messageStruct := struct {
 		Token string      `json:"token"`
 		Data  interface{} `json: "dat"`

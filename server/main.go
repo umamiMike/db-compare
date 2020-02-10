@@ -35,7 +35,7 @@ func (c *conf) get(filename string) *conf {
 
 }
 
-func csvThatShit() ([]map[string]string, error) {
+func csvThatStuff() ([]map[string]string, error) {
 	recordFile, err := os.Open("/home/mike/google-drive/Documents/Financial/data/ynab_register.csv")
 	if err != nil {
 		fmt.Println("An error encountered ::", err)
