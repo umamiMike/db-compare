@@ -36,49 +36,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	var pd requestJson
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&pd)
-	//querystring := pd.QueryString
 	uuid := generateUUID(&pd)
-	//var cn conf
 
-	//datachannel := make(chan []map[string]interface{})
-	//error_channel := make(chan error)
-
-	//go getFromDb(datachannel, error_channel, querystring, theconn)
-
-	//var resp interface{}
-	//select {
-	//case error := <-error_channel:
-	//errorStruct := struct {
-	//Token string `json:"token"`
-	//Dat   string `json: "err"`
-	//}{
-	//uuid,
-	//error.Error(),
-	//}
-	//jsonData, err := json.MarshalIndent(errorStruct, "", "  ")
-
-	//if err != nil {
-	//fmt.Println(err)
-
-	//}
-
-	//setHeaders(w)
-	//w.Write(jsonData)
-
-	//case message := <-datachannel:
-	//messageStruct := struct {
-	//Token string                   `json:"token"`
-	//Dat   []map[string]interface{} `json: "dat"`
-	//}{
-	//uuid,
-	//message,
-	//}
-	//jsonData, err := json.MarshalIndent(messageStruct, "", "  ")
-	//if err != nil {
-	//fmt.Println(err)
-	//}
-
-	rawdat, _ := csvThatStuff()
+	rawdat, _ := parseCsvFile("/home/mike/google-drive/Documents/Financial/data/ynab_register.csv")
 	messageStruct := struct {
 		Token string      `json:"token"`
 		Data  interface{} `json: "dat"`
