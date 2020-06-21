@@ -31,9 +31,9 @@ const App = (props: any) => {
     db: string;
   }
 
-  const makeQuery = (payload: Payload) => {
+  const makeQuery = (e: Event, payload: Payload) => {
     let rowdata = [];
-    /* let previousqueries.push({db: dbname, query: querystring}) */
+    QueryForm(payload);
   };
 
   const QueryForm = (payload: Payload) => {
@@ -72,9 +72,9 @@ const App = (props: any) => {
   return (
     <div className="App">
       <div className="Hello">
-        <div id="replacequery_cont">
-          <button className="replacequery"></button>
-        </div>
+        {/* <div id="replacequery_cont"> */}
+        {/*   <button className="replacequery"></button> */}
+        {/* </div> */}
         <h1> put message here</h1>
         <div id="someform" className="form">
           <div className="tab-content">
@@ -104,9 +104,9 @@ const App = (props: any) => {
                     >
                       show tables
                     </textarea>
-                    <button type="button" onDoubleClickCapture={makeQuery}>
-                      load data
-                    </button>
+                    {/* <button type="button" onClick={makeQuery}> */}
+                    {/*   load data */}
+                    {/* </button> */}
                   </div>
                 </div>
               </form>
@@ -117,15 +117,24 @@ const App = (props: any) => {
       <div className="tablecontainer">
         <table>
           <tr className="header">
+            //display headers
             {/* <th v-for="header in columns"> */}
-            <th>
-              <h2 onClick={insertIntoQuery}> header info</h2>
-            </th>
+            <th>{/* <h2 onClick={insertIntoQuery}> header info</h2> */}</th>
           </tr>
           <tr v-for="row in rowdata">
             {/* <td v-for="fielddata in row"> */}
             <td>
-              <h2 onClick={insertIntoQuery}> fielddata </h2>
+              td
+              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
+            </td>
+            <td>
+              td
+              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
+            </td>
+
+            <td>
+              td
+              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
             </td>
           </tr>
         </table>
