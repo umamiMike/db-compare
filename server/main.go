@@ -1,14 +1,13 @@
 package main
 
 import (
-	//"encoding/csv"
 	"encoding/json"
 	"fmt"
-	// "github.com/davecgh/go-spew/spew"
-	"github.com/recursionpharma/go-csv-map"
 	"log"
 	"net/http"
 	"os"
+
+	csvmap "github.com/recursionpharma/go-csv-map"
 )
 
 const serverport = ":9099"
@@ -35,8 +34,10 @@ func (c *conf) get(filename string) *conf {
 
 }
 
-func csvThatStuff() ([]map[string]string, error) {
-	recordFile, err := os.Open("/home/mike/google-drive/Documents/Financial/data/ynab_register.csv")
+// called from api indexHandler
+func parseCsvFile(csvFile string) ([]map[string]string, error) {
+
+	recordFile, err := os.Open(csvFile)
 	if err != nil {
 		fmt.Println("An error encountered ::", err)
 		return nil, err
@@ -64,27 +65,11 @@ func csvThatStuff() ([]map[string]string, error) {
 		return nil, err
 	}
 
-	//header := rawdat[0]
-	//var dat []map[string]string
-
-	//for rowindex, rowdata := range rows {
-	//// the row becomes a map
-	////{ "field": "value",
-
-	////}
-	//var xformed_row = map[string]string{}
-
-	//for h, j := range rowdata {
-
-	//fmt.Println(h, j)
-	//}
-	//append(dat, xformed_row)
-
-	//}
 	return allRecords, nil
 }
 
 func main() {
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/upload", upload)
 	http.ListenAndServe(serverport, nil)
 }

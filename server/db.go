@@ -10,6 +10,7 @@ import (
 )
 
 func getFromDb(data chan []map[string]interface{}, errorchan chan error, sqlString string, dbConn string) {
+
 	db, err := sql.Open("mysql", dbConn)
 	if err != nil {
 		errorchan <- err
