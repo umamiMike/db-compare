@@ -69,8 +69,23 @@ const App = (props: any) => {
     return querystring;
   };
 
+  const uploadForm = () => {
+    return (
+      <form
+        encType="multipart/form-data"
+        action="http://localhost:9099/upload"
+        method="post"
+      >
+        <input type="file" />
+        {/* token */}
+        <input type="hidden" />
+        <input type="submit" value="upload" />
+      </form>
+    );
+  };
   return (
     <div className="App">
+      {uploadForm()}
       <div className="Hello">
         {/* <div id="replacequery_cont"> */}
         {/*   <button className="replacequery"></button> */}
@@ -117,24 +132,22 @@ const App = (props: any) => {
       <div className="tablecontainer">
         <table>
           <tr className="header">
-            //display headers
             {/* <th v-for="header in columns"> */}
-            <th>{/* <h2 onClick={insertIntoQuery}> header info</h2> */}</th>
+            <th>header a</th>
+            <th>header b</th>
+            <th>header c</th>
           </tr>
-          <tr v-for="row in rowdata">
+          <tr>
             {/* <td v-for="fielddata in row"> */}
             <td>
-              td
-              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
+              datapoint 1{/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
             </td>
             <td>
-              td
-              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
+              datapoint 2{/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
             </td>
 
             <td>
-              td
-              {/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
+              datapoint 3{/* <h2 onClick={insertIntoQuery}> fielddata </h2> */}
             </td>
           </tr>
         </table>
