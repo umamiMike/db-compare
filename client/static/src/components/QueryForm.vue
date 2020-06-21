@@ -19,7 +19,8 @@
                 <label>
                   Query String<span class="req">*</span>
                 </label>
-                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-on:click="saveCursor" v-on:keyup="saveCursor" v-model="querystring" size="200" placeholder="Describe Users">show tables </textarea> <button type="button" v-on:click="makequery">make query to db</button>
+                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-on:click="saveCursor" v-on:keyup="saveCursor" v-model="querystring" size="200" placeholder="Describe Users">show tables </textarea>
+            <button v-on:click="makequery">make query to db</button>
               </div>
             </div>
           </form>
@@ -71,7 +72,7 @@ export default {
 
       let astr = this.querystring.substr(0,this.querypos)
       let cstr = this.querystring.substr(this.querypos)
-      this.querystring = astr + " " + newVal + cstr
+      this.querystring = astr + newVal + cstr
     },
     replacequerystring: function (newVal,event) {
       this.querystring =  newVal
@@ -103,6 +104,7 @@ export default {
           return data;
         })
         .then((data) => {
+        console.log(data)
           this.columns = Object.keys(data.Data[0])
           var parsedArray = data.Data.map(function(row){
 
