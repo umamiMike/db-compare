@@ -1,3 +1,17 @@
+# DB-compare client
+I am making this mostly as a code sample.  Much of my work has been for software that is not "Open" or public on github, gitlab, or the like.  I have mostly worked on bigger more enterprise level things.
+
+the DB compare is a tool to let you compare and query different datastores in the same interface.  In a job I had, I was always having to run sql  commands between seperate instances of our db to see what might be different, or what data might have been corrupted by state issues.
+
+
+
+I started this app years ago as a fun little side thing to learn vue.js.  I thought it would be fun to:  
+a. refactor something I did a long time ago
+b. learn from my past assumptions
+c. evaluate how I make do things now with how I did things then, when I had much less experience.
+
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
