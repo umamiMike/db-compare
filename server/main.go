@@ -35,6 +35,7 @@ func (c *conf) get(filename string) *conf {
 }
 
 // called from api indexHandler
+
 func parseCsvFile(csvFile string) ([]map[string]string, error) {
 
 	recordFile, err := os.Open(csvFile)
@@ -71,5 +72,6 @@ func parseCsvFile(csvFile string) ([]map[string]string, error) {
 func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/datasource", datasourceHandler)
 	http.ListenAndServe(serverport, nil)
 }

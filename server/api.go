@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 type myRespWriter struct {
@@ -27,6 +29,7 @@ func setHeaders(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+//TODO: convert to chi, this should be named
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	var pd requestJson
@@ -82,12 +85,41 @@ func upload(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func generateUUID(r *requestJson) string {
+type datasourceConnInfo struct {
+	Username string `json:"username"`
+	Hostname string `json:"hostname"`
+	Password string `json:"password"`
+	DbName   string `json:"db-name"`
+}
 
+func datasourceHandler(w http.ResponseWriter, r *http.Request) {
+
+	var dsr datasourceConnInfo
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&dsr)
+
+	spew.Dump(dsr)
+
+	id := 1
+	responseStruct := struct {
+		Id interface{} `json: "id"`
+	}{
+		id,
+	}
+
+	jsonData, err := json.MarshalIndent(responseStruct, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	setHeaders(w)
+	w.Write(jsonData)
+
+}
+
+func generateUUID(r *requestJson) string {
 	var uuid = ""
 	if len(r.Token) <= 0 {
 		uuid, _ = newUUID()
 	}
 	return uuid
-
 }
