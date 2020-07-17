@@ -19,5 +19,13 @@ export default function App(props: any) {
     );
   };
 
-  return <div className="App"> {uploadForm()} </div>;
+  return (
+    <div className="App">
+      {" "}
+      {/* 
+    // TODO: create uploadform query to api
+    uploadForm() 
+    */}{" "}
+    </div>
+  );
 }

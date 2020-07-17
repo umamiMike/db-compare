@@ -1,22 +1,76 @@
-# Story (Epic) - MVP
+# (Epic) - MVP
 
-Joe is a software is a software dev
+## Say Hi to Joe
+
+Joe is a software is a software dev - valid credentials (Happy Path)
 
 He has a production db and staging db
 
 he is given a report, along with a bugfix ticket
-because a customer is seeing incorrect data in their interface
+because a customer is seeing incorrect data in their application interface.
 
-Joe fires up the tool
-there is an interface with various forms
-and loads the report data in as a data source
+## User Story #1 - Joe can query the [datasource](datasource)
+
+
+Joe enters the url and is greeted with the page. 
+there is an interface containing various forms.
+He types in the [credentials](api-design.md#POST /datasource) needed for connecting to a postgres-db he has
+identifier
+name
+
+access to and adds and hits add
+
+he loads the report data in as another data source
+
 then loads his db credentials in a form and hits submit
 and now has populated a list of data sources he can select from
 
 He fills in a query in a textarea and hits the query button
 and sees the data from his selected data source in a table
 
+<!-- The valuable final product -->
+
+### Acceptance Criteria
+
+#### Notes on Acceptence Criteria
+
+The Acceptance Criteria is **what** things need doing to make the story successful
+dont create criteria not mentioned in the story
+
+
+- [api design](api-design.md#POST /datasource) for creating new datasource
+
+- various forms
+- there is a form on the page allowing you to upload csv data
+    - returns TODO:
+- there is a form for username, hostname, password, database name
+-  [POST datasource-credentials](#POST /datasource-credentials)
+    - returns id - there is a blank data source selection menu - there is a textarea with a submit button, which is disabled 
+
+
+
+- when you hit the add button, the data is sent to the server via rest POST request
+- the server responds with successfully added data source message in json 
+- the data source shows up in the data source selection menu
+
+- the system allows you to type in a VALID SQL QUERY to the textarea, 
+- hitting submit will send a http POST (which breaks REST convention endpoints) request with a json object containing the selected data source and the query string
+
+<!-- - What is the length of a max of a query param??? -->
+- 
+  <!-- NOTE: elasticsearch uses get WITH a req body (which is weird) -->
+
+- after successful response from api, a table appears containing the rows and
+columns from the sql query
+
+
+
+## Comparing csv report data to sql query - (Happy Path)
+
+
 ## He creates a new instance of the interface he just used
+
+Joe wants to compare the data on the staging server with the csv report
 
 which has the same data sources populated for him to select
 he can select on the staging db source
@@ -43,10 +97,8 @@ Cant query it, or kills the server attempting
 
 
 
-
 when I load the app
   - [ ] the page has initial data
-  - [ ] load the save
 
 when I click the query button
 - [ ]  fetch the appropriate data from api
@@ -54,35 +106,32 @@ when I click the query button
   - [ ]  populate instance table
 - [ ]  columns and rows
 
-- query should be read only
-```js
+## resources
 
-  let querystring = " ";
-  let querypos = 0;
-  let dbname = "new";
-  let columns = [];
-  let rowdata = [];
-  // list of dbs, of type string, when sent to the api will dictate the db to read from
-  let dbs = ["ae1", "New", "Test"];
-  let previousqueries = [];
+### datasource
+
+#### examples of a datasource
+
+a db
+a csv file
+a text document
 
 
+## db-connection
 
-  const saveCursor = (event: any) => {
-    event.preventDefault();
-    let querypos = event.target.selectionStart;
-    let se = event.target.selectionEnd;
-    return "";
-  };
+the data needed to establish a connection to a db you wish to connect with via
+the application
 
-const insertIntoQuery = (newVal: any, event: any) => {
-  let astr = querystring.substr(0, querypos);
-  let cstr = querystring.substr(querypos);
-  querystring = astr + " " + newVal + cstr;
-};
-  const replaceQueryString = (newVal: any, event: Event) => {
-    let querystring = newVal;
-    return querystring;
-  };
-```
 
+### Notes about user stories in general
+
+this is the **why** of the user story
+be as specific as possible when describing the story context. If they can be
+actual cases all the better
+do as little in the story as possible still containing value
+
+
+# tmp
+
+I am keeping some old code in 
+[scratch](scratch.tsx)

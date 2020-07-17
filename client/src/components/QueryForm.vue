@@ -19,7 +19,7 @@
                 <label>
                   Query String<span class="req">*</span>
                 </label>
-                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-on:click="saveCursor" v-on:keyup="saveCursor" v-model="querystring" size="200" placeholder="Describe Users">show tables </textarea> <button type="button" v-on:click="makequery">make query to db</button>
+                <textarea class="queryinput" type="multiline" cols="40" rows="5" v-on:click="saveCursor" v-on:keyup="saveCursor" v-model="querystring" size="200" placeholder="Describe Users">show tables </textarea> <button type="button" v-on:click="makequery">load data</button>
               </div>
             </div>
           </form>
@@ -50,7 +50,7 @@ export default {
   name: 'QueryForm',
   data() {
     return {
-      querystring: 'show tables',
+      querystring: ' ',
       querypos: 0,
       msg: 'Query Form at your service',
       dbname: 'new',
