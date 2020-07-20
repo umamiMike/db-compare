@@ -17,7 +17,7 @@ type conndata struct {
 }
 
 func main() {
-	http.HandleFunc("/", indexHandler)
+	// http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/datasource", datasourceHandler)
 	http.ListenAndServe(serverport, nil)
 }

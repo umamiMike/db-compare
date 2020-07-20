@@ -30,20 +30,13 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: Convert to  recieving file upload????  url??? //
 	rawdat, _ := parseCsvFile("/home/mike/google-drive/Documents/Financial/data/ynab_register.csv")
 	//TODO: store in db???
-	messageStruct := struct {
-		Token string      `json:"token"`
-		Data  interface{} `json: "dat"`
-	}{
-		uuid,
-		rawdat,
-	}
-	jsonData, err := json.MarshalIndent(messageStruct, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-	}
-	setJsonHeaders(w)
+	response := map[string]interface{}{
+		"index": "silence is golden",
+	}	setJsonHeaders(w)
 	w.Write(jsonData)
 }
+
+// ------------- datasource --------------------
 
 type datasourceConnInfo struct {
 	Username string `json:"username"`
@@ -60,14 +53,15 @@ func datasourceHandler(w http.ResponseWriter, r *http.Request) {
 
 	spew.Dump(dsr)
 
-	id := 1
-	responseStruct := struct {
-		id interface{} `json: "id"`
-	}{
-		id,
+	// passing the input data back to the output
+	response := map[string]interface{}{
+		"username": dsr.Username,
+		"host":     dsr.Hostname,
+		"password": dsr.Password,
+		"dbname":   dsr.DbName,
 	}
 
-	jsonData, err := json.MarshalIndent(responseStruct, "", "  ")
+	jsonData, err := json.MarshalIndent(response, "", "  ")
 	if err != nil {
 		fmt.Println(err)
 	}

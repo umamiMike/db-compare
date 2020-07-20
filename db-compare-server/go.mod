@@ -1,4 +1,4 @@
-module github.com/umamimike/db-compare/server
+module github.com/umamimike/db-compare/db-compare-server
 
 go 1.13
 
