@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 )
 
@@ -18,6 +19,7 @@ type conndata struct {
 
 func main() {
 	// http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/datasource", datasourceHandler)
+	http.HandleFunc("/datasources", datasourcesHandler)
 	http.ListenAndServe(serverport, nil)
+	fmt.Println("running on http://localhost:9099")
 }
