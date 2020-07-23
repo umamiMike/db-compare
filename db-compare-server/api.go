@@ -6,6 +6,9 @@ import (
 	"net/http"
 )
 
+//Convenience for typing
+type msi = map[string]interface{}
+
 type requestJson struct {
 	QueryString string `json:"query"`
 	DbKey       string `json:"db"`
@@ -54,11 +57,11 @@ func datasourcesHandler(w http.ResponseWriter, r *http.Request) {
 	decoder.Decode(&dsr)
 
 	// passing the input data back to the output
-	response := map[string]interface{}{
-		"data": map[string]interface{}{
+	response := msi{
+		"data": msi{
 			"type": "datasource",
 			"id":   "1",
-			"properties": map[string]interface{}{
+			"properties": msi{
 				"username": dsr.Username,
 				"host":     dsr.Hostname,
 				"password": dsr.Password,
