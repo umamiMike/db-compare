@@ -12,6 +12,7 @@ in
 mkShell {
   buildInputs = [
   go
+  tmux
   nodejs
   postgresql
 
@@ -38,11 +39,12 @@ export PGHOST="$PGDATA"
       killall postgres
       }
 
-      echo  -e "start db?" 
-      read startdb
-      if [  $startdb = "y" ]; then
-      source ./setup-postgres.sh
-      fi
+      # echo  -e "start db?" 
+      # read startdb
+      # if [  $startdb = "y" ]; then
+      # source ./setup-postgres.sh
+      ./startme.sh
+      # fi
 
     '';
 }
