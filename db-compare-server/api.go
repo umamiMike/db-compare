@@ -42,7 +42,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 type DatasourceCredentials struct {
 	Username string `json:"username"`
-	Hostname string `json:"hostname"`
+	Hostname string `json:"host"`
 	Password string `json:"password"`
 	DbName   string `json:"dbname"`
 }
