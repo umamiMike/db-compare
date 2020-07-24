@@ -7,9 +7,7 @@ interface Props {
 }
 
 export default function TextArea(props: Props) {
-  const initProps = {
-    style: { height: "15em" },
-  };
+  const initProps = {};
   const elProps = { ...initProps, ...props };
 
   return <textarea {...elProps} />;

@@ -14,7 +14,6 @@ interface Props {
 }
 
 export default function DatasourceCredentialsForm(props: Props) {
-  const elProps = { ...props };
   const { creds, onSubmit } = props;
   const submitFormData = onSubmit;
   const [formdata, setFormData] = useState(creds);
@@ -27,12 +26,11 @@ export default function DatasourceCredentialsForm(props: Props) {
           type="text"
           placeholder="database name"
           onChange={(e) => {
-            e.preventDefault();
             formdata.dbname = e.target.value;
-            console.log(formdata);
             setFormData(formdata);
           }}
         />
+        <br />
         <label>username</label>
         <input
           type="text"
@@ -42,6 +40,7 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
+        <br />
         <label>host</label>
         <input
           type="text"
@@ -51,7 +50,6 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-
         <label>password</label>
         <input
           type="text"
@@ -68,7 +66,7 @@ export default function DatasourceCredentialsForm(props: Props) {
         }}
       >
         {" "}
-        submit{" "}
+        submit
       </button>
     </div>
   );

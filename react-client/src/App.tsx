@@ -1,20 +1,16 @@
 import React, { useState } from "react";
-/* import TextArea from "./TextArea"; */
 import "./App.css";
 import DatasourceCredentialsForm from "./DatasourceCredentialsForm";
 import TextArea from "./TextArea";
 
-export default function App(props: any) {
+export default function App() {
+  const api = "http://localhost:9099";
+  const [query, setQuery] = useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log(e.target.value);
+    /* console.log(e.target.value); */
   };
   //TODO: refactor duplicate in DatasourceCredsForm
-  interface DsCreds {
-    username: string;
-    host: string;
-    password: string;
-    dbname: string;
-  }
   const initCreds = {
     username: "",
     host: "",
@@ -23,8 +19,8 @@ export default function App(props: any) {
   };
 
   /* TODO: set expected response headers */
-  const handleSubmit = (formdata: DsCreds) => {
-    fetch("http://localhost:9099/datasources", {
+  const handleSubmit = (formdata: any) => {
+    fetch(api + "datasources", {
       method: "POST",
       body: JSON.stringify(formdata),
     })
@@ -38,33 +34,28 @@ export default function App(props: any) {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         return data;
-      })
-      .then((data) => {
-        /* let cols = Object.keys(data.Data[-1]); */
-        /* let rows = data.Data.map(function (row: any) { */
-        /*   return Object.values(row); */
-        /* }); */
       })
       .catch((error) => {});
   };
 
-  const uploadForm = () => {
-    return (
-      <div>
-        <form>
-          <input type="file" />
-          <input type="hidden" />
-          <input type="submit" value="upload" />
-        </form>
-      </div>
-    );
+  const handleQuery = (q: string) => {
+    console.log(q);
   };
+
   return (
     <div className="App">
       <DatasourceCredentialsForm creds={initCreds} onSubmit={handleSubmit} />
-      <TextArea name="something" onChange={handleChange} />
+      <TextArea name="query" onChange={(e) => setQuery(e.target.value)} />
+      <button
+        value={query}
+        onClick={() => {
+          handleQuery(query);
+        }}
+      >
+        {" "}
+        query the db
+      </button>
     </div>
   );
 }
