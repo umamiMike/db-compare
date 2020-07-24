@@ -7,7 +7,6 @@ export default function App() {
   const api = "http://localhost:9099";
   const [query, setQuery] = useState("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => { console.log(e.target.value); */ };
   //TODO: refactor duplicate in DatasourceCredsForm
   const initCreds = {
     username: "",
@@ -23,7 +22,7 @@ export default function App() {
       body: JSON.stringify({
         data: {
           type: "datasource",
-          properties: { ...formdata },
+          attributes: { ...formdata },
         },
       }),
     })
@@ -50,7 +49,7 @@ export default function App() {
       body: JSON.stringify({
         data: {
           type: "query",
-          properties: {
+          attributes: {
             query_string: query,
           },
         },
@@ -66,6 +65,7 @@ export default function App() {
         return response.json();
       })
       .then((data) => {
+        console.log(data);
         return data;
       })
       .catch((error) => {});
@@ -83,6 +83,8 @@ export default function App() {
         {" "}
         query the db
       </button>
+
+      <h1>{query}</h1>
     </div>
   );
 }
