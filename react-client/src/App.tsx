@@ -20,7 +20,7 @@ export default function App() {
 
   /* TODO: set expected response headers */
   const handleSubmit = (formdata: any) => {
-    fetch(api + "datasources", {
+    fetch(api + "/datasources", {
       method: "POST",
       body: JSON.stringify(formdata),
     })
@@ -39,8 +39,26 @@ export default function App() {
       .catch((error) => {});
   };
 
-  const handleQuery = (q: string) => {
-    console.log(q);
+  const handleQuery = () => {
+    console.log(query);
+
+    fetch(api + "/queries", {
+      method: "POST",
+      body: JSON.stringify(query),
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then(function (response) {
+        return response.json();
+      })
+      .then((data) => {
+        return data;
+      })
+      .catch((error) => {});
   };
 
   return (
@@ -48,9 +66,8 @@ export default function App() {
       <DatasourceCredentialsForm creds={initCreds} onSubmit={handleSubmit} />
       <TextArea name="query" onChange={(e) => setQuery(e.target.value)} />
       <button
-        value={query}
         onClick={() => {
-          handleQuery(query);
+          handleQuery();
         }}
       >
         {" "}
