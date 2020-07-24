@@ -9,22 +9,6 @@ import (
 //Convenience for typing
 type msi = map[string]interface{}
 
-type requestJson struct {
-	QueryString string `json:"query"`
-	DbKey       string `json:"db"`
-	Token       string `json:"token"`
-}
-
-func setJsonHeaders(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/json")
-}
-
-func setJsonApiHeaders(w http.ResponseWriter) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Content-Type", "application/vnd.api+json")
-}
-
 //TODO: convert to chi, this should be named
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -42,6 +26,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // ------------- datasource --------------------
+type JsonApi struct {
+	Data Data `json: "data"`
+}
+type Data struct {
+	Id         string `json: "id"`
+	Type       string `json: "type"`
+	Attributes msi    `json: "attributes"`
+}
 
 type DatasourceCredentials struct {
 	Username string `json:"username"`
@@ -57,11 +49,11 @@ func datasourcesHandler(w http.ResponseWriter, r *http.Request) {
 	decoder.Decode(&dsr)
 
 	// passing the input data back to the output
-	response := msi{
-		"data": msi{
-			"type": "datasource",
-			"id":   "1",
-			"properties": msi{
+	response := JsonApi{
+		Data: Data{
+			Type: "datasource",
+			Id:   "1",
+			Attributes: msi{
 				"username": dsr.Username,
 				"host":     dsr.Hostname,
 				"password": dsr.Password,
@@ -82,18 +74,16 @@ func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
 
 	var query string
 	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&dsr)
+	decoder.Decode(&query)
 
 	// passing the input data back to the output
-	response := msi{
-		"data": msi{
-			"type": "query",
-			"id":   "1",
-			"properties": msi{
-				"query_string": "sup foo",
-				"response":     dsr.Hostname,
-				"password":     dsr.Password,
-				"dbname":       dsr.DbName,
+	response := JsonApi{
+		Data: Data{
+			Type: "query",
+			Id:   "1",
+			Attributes: msi{
+				"query_string": query,
+				"datasource":   "somedatasource",
 			},
 		},
 	}

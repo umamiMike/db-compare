@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"io"
+	"net/http"
 )
 
 func newUUID() (string, error) {
@@ -17,4 +18,14 @@ func newUUID() (string, error) {
 	// version 4 (pseudo-random); see section 4.1.3
 	uuid[6] = uuid[6]&^0xf0 | 0x40
 	return fmt.Sprintf("%x-%x-%x-%x-%x", uuid[0:4], uuid[4:6], uuid[6:8], uuid[8:10], uuid[10:]), nil
+}
+
+func setJsonHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/json")
+}
+
+func setJsonApiHeaders(w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Content-Type", "application/vnd.api+json")
 }
