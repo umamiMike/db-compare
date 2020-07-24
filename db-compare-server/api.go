@@ -25,7 +25,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// ------------- datasource --------------------
+// ------------- JsonApi structs -----------------
 type JsonApi struct {
 	Data Data `json: "data"`
 }
@@ -34,6 +34,8 @@ type Data struct {
 	Type       string `json: "type"`
 	Attributes msi    `json: "attributes"`
 }
+
+// ------------- datasource --------------------
 
 type DatasourceCredentials struct {
 	Username string `json:"username"`
