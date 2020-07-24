@@ -44,6 +44,7 @@ func main() {
 	fmt.Printf("server  started at http://localhost%v/\n ", server.Addr)
 
 	r.Post("/datasources", datasourcesHandler)
+	r.Post("/queries", queriesPostHandler)
 	panic(server.ListenAndServe())
 	fmt.Println("running on http://localhost:9099")
 }

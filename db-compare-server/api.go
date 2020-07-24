@@ -77,3 +77,31 @@ func datasourcesHandler(w http.ResponseWriter, r *http.Request) {
 	setJsonApiHeaders(w)
 	w.Write(jsonData)
 }
+
+func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
+
+	var query string
+	decoder := json.NewDecoder(r.Body)
+	decoder.Decode(&dsr)
+
+	// passing the input data back to the output
+	response := msi{
+		"data": msi{
+			"type": "query",
+			"id":   "1",
+			"properties": msi{
+				"query_string": "sup foo",
+				"response":     dsr.Hostname,
+				"password":     dsr.Password,
+				"dbname":       dsr.DbName,
+			},
+		},
+	}
+
+	jsonData, err := json.MarshalIndent(response, "", "  ")
+	if err != nil {
+		fmt.Println(err)
+	}
+	setJsonApiHeaders(w)
+	w.Write(jsonData)
+}
