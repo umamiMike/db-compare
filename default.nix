@@ -32,7 +32,6 @@ export PGDATA="$dev/postgres"
 export PGHOST="$PGDATA"
 # create if doesnt exist
 
-      # TODO: only kill if no clients connected
       
       function cleanup {
       echo "exiting the shell and killing postgres" 

@@ -9,7 +9,6 @@ import (
 //Convenience for typing
 type msi = map[string]interface{}
 
-//TODO: convert to chi, this should be named
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	response := map[string]interface{}{
