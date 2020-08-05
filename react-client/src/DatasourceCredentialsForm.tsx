@@ -1,12 +1,6 @@
 import React, { useState } from "react";
+import { DsCreds } from "./credentials";
 import "./App.css";
-
-interface DsCreds {
-  username: string;
-  host: string;
-  password: string;
-  dbName: string;
-}
 
 interface Props {
   creds: DsCreds;
