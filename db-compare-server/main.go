@@ -23,7 +23,6 @@ type conndata struct {
 
 func main() {
 	r := chi.NewRouter()
-	//TODO: manage this more correctly
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"*"},
@@ -41,10 +40,11 @@ func main() {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	fmt.Printf("server  started at http://localhost%v/\n ", server.Addr)
+	fmt.Printf("server started at http://localhost%v/\n ", server.Addr)
 
-	r.Post("/datasources", datasourcesHandler)
-	r.Post("/queries", queriesPostHandler)
+	r.Get("/", indexHandler)
+	r.Post("/datasources", datasourcesPostHandler)
+	// r.Post("/queries", queriesPostHandler)
 	panic(server.ListenAndServe())
 	fmt.Println("running on http://localhost:9099")
 }
