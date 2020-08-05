@@ -27,23 +27,27 @@ mkShell {
     # Put the PostgreSQL databases in the project diretory.
  shellHook = ''
 # Place the data directory inside the project directory
-export PGDATA="$dev/postgres"
-# Place Postgres' Unix socket inside the data directory
-export PGHOST="$PGDATA"
-# create if doesnt exist
+      # function cleanup {
+      # echo "exiting the shell and killing postgres" 
+      # killall postgres
+      # }
 
-      
-      function cleanup {
-      echo "exiting the shell and killing postgres" 
-      killall postgres
-      }
+mkdir -p postgres
 
-      # echo  -e "start db?" 
-      # read startdb
-      # if [  $startdb = "y" ]; then
-      # source ./setup-postgres.sh
-      ./startme.sh
-      # fi
+root="$(pwd)"
+tmux set -g pane-border-status top
+tmux set -g pane-border-format "#{pane_index} #{pane_current_command}"
+tmux rename-window 'umbrella'
+
+tmux new-window -n server
+tmux send-keys 'cd ./db-compare-server/ && go build && ./db-compare-server' 'C-m'
+
+tmux new-window -n react-client
+tmux send-keys  'cd react-client &&  npm run start' 'C-m'
+
+tmux new-window -n postgres-db
+tmux send-keys  'source setup-postgres.sh' 'C-m'
+# tmux attach-session db-compare
 
     '';
 }
