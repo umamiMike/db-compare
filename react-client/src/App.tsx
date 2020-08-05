@@ -12,7 +12,7 @@ export default function App() {
     username: "",
     host: "",
     password: "",
-    dbname: "",
+    dbName: "",
   };
 
   /* TODO: set expected response headers */

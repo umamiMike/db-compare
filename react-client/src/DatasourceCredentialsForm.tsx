@@ -5,7 +5,7 @@ interface DsCreds {
   username: string;
   host: string;
   password: string;
-  dbname: string;
+  dbName: string;
 }
 
 interface Props {
@@ -26,7 +26,7 @@ export default function DatasourceCredentialsForm(props: Props) {
           type="text"
           placeholder="database name"
           onChange={(e) => {
-            formdata.dbname = e.target.value;
+            formdata.dbName = e.target.value;
             setFormData(formdata);
           }}
         />
