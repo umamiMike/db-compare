@@ -7,7 +7,6 @@ export default function App() {
   const api = "http://localhost:9099";
   const [query, setQuery] = useState("");
 
-  //TODO: refactor duplicate in DatasourceCredsForm
   const initCreds = {
     username: "",
     host: "",
@@ -15,7 +14,6 @@ export default function App() {
     dbName: "",
   };
 
-  /* TODO: set expected response headers */
   const handleSubmit = (formdata: any) => {
     fetch(api + "/datasources", {
       method: "POST",
