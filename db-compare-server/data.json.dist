@@ -1,0 +1,13 @@
+{ 
+  "server_port": "8080", 
+  "dbs": [	
+    {
+      "name":"keyToEnterFromDatabaseFieldInQueryForm",
+      "conn":  "user:password@tcp(hostname:dbportnumber)/DbName"
+    },
+    {
+      "name":"another",
+      "conn":  "anotherconn"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+h1,
+h2 {
+}
+
+ul {
+  padding: 0;
+}
+
+li {
+  display: inline-block;
+}
+
+a {
+  color: #42b983;
+}
+form {
+  margin: auto;
+  width: 50%;
+}
+#replacequery_cont {
+  float: none;
+}
+
+.queryinput {
+  background: rgb(240, 240, 240);
+  font-family: inherit;
+  margin: 16px;
+  padding: 16px;
+}
+.header {
+  padding: 16px;
+  margin: -1px;
+  border: 1px;
+  border-color: black;
+}
+.field-checklist .wrapper {
+}
+.tablecontainer {
+  height: 399px;
+  overflow: scroll;
+}
+table {
+}
+th {
+}
+tr:nth-child(even) {
+  background: #cdcccc;
+}
