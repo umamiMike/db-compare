@@ -1,7 +1,3 @@
-/**
-TODO: add option to start server with config file
-EX: dbcompare --config /path/to/configfilename.ext */
-
 package main
 
 import (

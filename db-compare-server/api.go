@@ -4,34 +4,30 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/umamimike/db-compare/db-compare-server/db"
 )
 
+var storageDir = "app-db-data/"
+
 //Convenience for typing
-type msi = map[string]interface{}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-
 	response := map[string]interface{}{
 		"data": "stub",
 	}
-
-	jsonData, err := json.MarshalIndent(response, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-	}
-	setJsonHeaders(w)
-	w.Write(jsonData)
+	json.NewEncoder(w).Encode(response)
 
 }
 
-// ------------- JsonApi structs -----------------
-type JsonApi struct {
-	Data Data `json: "data"`
-}
+type msi = map[string]interface{}
+
+// ------------- Wrapper structs -----------------
+
 type Data struct {
-	Id         string `json: "id"`
-	Type       string `json: "type"`
-	Attributes msi    `json: "attributes"`
+	Id         string                 `json:"id"`
+	Type       string                 `json:"type"`
+	Attributes map[string]interface{} `json:"attributes"`
 }
 
 // ------------- datasource --------------------
@@ -43,32 +39,32 @@ type DatasourceCredentials struct {
 	DbName   string `json:"dbname"`
 }
 
-func datasourcesHandler(w http.ResponseWriter, r *http.Request) {
+func datasourcesPostHandler(w http.ResponseWriter, r *http.Request) {
+
+	storage := db.NewBadger(storageDir)
+	defer storage.Close()
 
 	var dsr DatasourceCredentials
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&dsr)
 
+	ID, _ := newUUID()
 	// passing the input data back to the output
-	response := JsonApi{
-		Data: Data{
-			Type: "datasource",
-			Id:   "1",
-			Attributes: msi{
-				"username": dsr.Username,
-				"host":     dsr.Hostname,
-				"password": dsr.Password,
-				"dbname":   dsr.DbName,
-			},
+	resp := &Data{
+		Id:   ID,
+		Type: "datasource",
+		Attributes: msi{
+			"username": dsr.Username,
+			"hostname": dsr.Hostname,
+			"dbname":   dsr.DbName,
 		},
 	}
 
-	jsonData, err := json.MarshalIndent(response, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-	}
-	setJsonApiHeaders(w)
-	w.Write(jsonData)
+	// storage.Set(ID, response)
+	// setJsonApiHeaders(w)
+	rs, _ := json.Marshal(resp)
+	fmt.Println(string(rs))
+	w.Write(rs)
 }
 
 func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,22 +73,16 @@ func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&query)
 
+	ID, _ := newUUID()
 	// passing the input data back to the output
-	response := JsonApi{
-		Data: Data{
-			Type: "query",
-			Id:   "1",
-			Attributes: msi{
-				"query_string": query,
-				"datasource":   "somedatasource",
-			},
+	response := &Data{
+		Id:   ID,
+		Type: "query",
+		Attributes: msi{
+			"query_string": query,
+			"datasource":   "somedatasource",
 		},
 	}
-
-	jsonData, err := json.MarshalIndent(response, "", "  ")
-	if err != nil {
-		fmt.Println(err)
-	}
 	setJsonApiHeaders(w)
-	w.Write(jsonData)
+	json.NewEncoder(w).Encode(response)
 }
