@@ -31,6 +31,9 @@ which I think is neat.
 
 It is very much a work in progress at the moment
 
+1. Install nix ` curl -L https://nixos.org/nix/install | sh `
+2. cd into the project directory
+3. Run `nix-shell`
 
 ## Clients
 
