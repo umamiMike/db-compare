@@ -32,22 +32,24 @@ mkShell {
       # killall postgres
       # }
 
-mkdir -p postgres
 
 root="$(pwd)"
+
+tmux new-session -d -s db-compare-dev
 tmux set -g pane-border-status top
 tmux set -g pane-border-format "#{pane_index} #{pane_current_command}"
-tmux rename-window 'umbrella'
 
-tmux new-window -n server
+tmux new-window -t db-compare-dev -n umbrella
+
+tmux new-window -t db-compare-dev -n server
 tmux send-keys 'cd ./db-compare-server/ && go build && ./db-compare-server' 'C-m'
 
-tmux new-window -n react-client
+tmux new-window -t db-compare-dev -n react-client
 tmux send-keys  'cd react-client &&  npm run start' 'C-m'
 
-tmux new-window -n postgres-db
+tmux new-window -t db-compare-dev -n postgres-db
 tmux send-keys  'source setup-postgres.sh' 'C-m'
-# tmux attach-session db-compare
 
+tmux attach -t db-compare-dev
     '';
 }
