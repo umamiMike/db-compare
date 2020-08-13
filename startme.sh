@@ -9,4 +9,4 @@ tmux rename-window 'db-compare'
 tmux new-window -n server
 tmux send-keys 'cd ./db-compare-server/ && go build && ./db-compare-server' 'C-m'
 tmux new-window -n react-client
-tmux send-keys  'cd react-client &&  npm run start' 'C-m'
+tmux send-keys  '[ ! -d "./react-client/node_modules" ] && cd ./react-client && npm install && npm run start;  cd ./react-client npm run start' 'C-m'
