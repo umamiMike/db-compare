@@ -10,10 +10,11 @@ import (
 
 var storageDir = "app-db-data/"
 
+type msi = map[string]interface{}
+
 //Convenience for typing
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-
 	response := msi{
 		"data": "stub",
 	}
@@ -21,25 +22,15 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-type msi map[string]interface{}
+// ------------- Wrapper structs -----------------
 
-type (
-	JsonApi struct {
-		Data Data `json:"data"`
-	}
-	Data struct {
-		Id         string `json:"id"`
-		Type       string `json:"type"`
-		Attributes msi    `json:"attributes"`
-	}
+type Data struct {
+	Id         string `json:"id"`
+	Type       string `json:"type"`
+	Attributes msi    `json:"attributes"`
+}
 
-	DatasourceCredentials struct {
-		Username string `json:"username"`
-		Hostname string `json:"host"`
-		Password string `json:"password"`
-		DbName   string `json:"dbname"`
-	}
-)
+// ------------- datasource --------------------
 
 func datasourcesPostHandler(w http.ResponseWriter, r *http.Request) {
 
@@ -68,6 +59,8 @@ func datasourcesPostHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(string(rs))
 	w.Write(rs)
 }
+
+func dsGetHandler() {}
 
 func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
 
