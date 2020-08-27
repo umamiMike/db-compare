@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface Props {
   name: string;
@@ -12,4 +12,3 @@ export default function TextArea(props: Props) {
 
   return <textarea {...elProps} />;
 }
-

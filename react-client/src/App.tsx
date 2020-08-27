@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import "./App.css";
-import DatasourceCredentialsForm from "./DatasourceCredentialsForm";
-import TextArea from "./TextArea";
+import React, { useState } from 'react';
+import './App.css';
+import DatasourceCredentialsForm from './DatasourceCredentialsForm';
+import TextArea from './TextArea';
 
 export default function App() {
-  const api = "http://localhost:9099";
-  const [query, setQuery] = useState("");
+  const api = 'http://localhost:9099';
+  const [query, setQuery] = useState('');
 
   const initCreds = {
-    username: "",
-    host: "",
-    password: "",
-    dbName: "",
+    username: '',
+    host: '',
+    password: '',
+    dbName: '',
   };
 
   const handleSubmit = (formdata: any) => {
-    fetch(api + "/datasources", {
-      method: "POST",
+    fetch(api + '/datasources', {
+      method: 'POST',
       body: JSON.stringify({
         data: {
-          type: "datasource",
+          type: 'datasource',
           attributes: { ...formdata },
         },
       }),
@@ -33,20 +33,22 @@ export default function App() {
       .then(function (response) {
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         return data;
       })
-      .catch((error) => {});
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   const handleQuery = () => {
     console.log(query);
 
-    fetch(api + "/queries", {
-      method: "POST",
+    fetch(api + '/queries', {
+      method: 'POST',
       body: JSON.stringify({
         data: {
-          type: "query",
+          type: 'query',
           attributes: {
             query_string: query,
           },
@@ -62,23 +64,25 @@ export default function App() {
       .then(function (response) {
         return response.json();
       })
-      .then((data) => {
+      .then(data => {
         console.log(data);
         return data;
       })
-      .catch((error) => {});
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   return (
-    <div className="App">
+    <div className='App'>
       <DatasourceCredentialsForm creds={initCreds} onSubmit={handleSubmit} />
-      <TextArea name="query" onChange={(e) => setQuery(e.target.value)} />
+      <TextArea name='query' onChange={e => setQuery(e.target.value)} />
       <button
         onClick={() => {
           handleQuery();
         }}
       >
-        {" "}
+        {' '}
         query the db
       </button>
 
