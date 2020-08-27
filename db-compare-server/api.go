@@ -11,7 +11,7 @@ type msi = map[string]interface{}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 
-	response := map[string]interface{}{
+	response := msi{
 		"data": "stub",
 	}
 
@@ -24,24 +24,23 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// ------------- JsonApi structs -----------------
-type JsonApi struct {
-	Data Data `json: "data"`
-}
-type Data struct {
-	Id         string `json: "id"`
-	Type       string `json: "type"`
-	Attributes msi    `json: "attributes"`
-}
+type (
+	JsonApi struct {
+		Data Data `json:"data"`
+	}
+	Data struct {
+		Id         string `json:"id"`
+		Type       string `json:"type"`
+		Attributes msi    `json:"attributes"`
+	}
 
-// ------------- datasource --------------------
-
-type DatasourceCredentials struct {
-	Username string `json:"username"`
-	Hostname string `json:"host"`
-	Password string `json:"password"`
-	DbName   string `json:"dbname"`
-}
+	DatasourceCredentials struct {
+		Username string `json:"username"`
+		Hostname string `json:"host"`
+		Password string `json:"password"`
+		DbName   string `json:"dbname"`
+	}
+)
 
 func datasourcesHandler(w http.ResponseWriter, r *http.Request) {
 
