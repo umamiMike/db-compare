@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { DsCreds } from "./credentials";
-import "./App.css";
+import React, { useState } from 'react';
+import { DsCreds } from './credentials';
+import './App.css';
 
 interface Props {
   creds: DsCreds;
@@ -17,9 +17,9 @@ export default function DatasourceCredentialsForm(props: Props) {
       <form>
         <label>database</label>
         <input
-          type="text"
-          placeholder="database name"
-          onChange={(e) => {
+          type='text'
+          placeholder='database name'
+          onChange={e => {
             formdata.dbName = e.target.value;
             setFormData(formdata);
           }}
@@ -27,9 +27,9 @@ export default function DatasourceCredentialsForm(props: Props) {
         <br />
         <label>username</label>
         <input
-          type="text"
-          placeholder="username"
-          onChange={(e) => {
+          type='text'
+          placeholder='username'
+          onChange={e => {
             formdata.username = e.target.value;
             setFormData(formdata);
           }}
@@ -37,18 +37,18 @@ export default function DatasourceCredentialsForm(props: Props) {
         <br />
         <label>host</label>
         <input
-          type="text"
-          placeholder="host"
-          onChange={(e) => {
+          type='text'
+          placeholder='host'
+          onChange={e => {
             formdata.host = e.target.value;
             setFormData(formdata);
           }}
         />
         <label>password</label>
         <input
-          type="text"
-          placeholder="password"
-          onChange={(e) => {
+          type='text'
+          placeholder='password'
+          onChange={e => {
             formdata.password = e.target.value;
             setFormData(formdata);
           }}
@@ -59,7 +59,7 @@ export default function DatasourceCredentialsForm(props: Props) {
           submitFormData(formdata);
         }}
       >
-        {" "}
+        {' '}
         submit
       </button>
     </div>
