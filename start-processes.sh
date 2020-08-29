@@ -5,20 +5,20 @@
       # killall postgres
       # }
 
-
+# new window 
+#    -c  is the starting directory
 root="$(pwd)"
 
-tmux new-session -d -s db-compare-dev
+tmux kill-session -t db-compare-dev
+tmux new-session -d -s db-compare-dev 
 
-tmux new-window -t db-compare-dev -n umbrella
+tmux new-window -t db-compare-dev:2 -n server -c $root/db-compare-server
+tmux send-keys -t db-compare-dev:2 './dev-build.sh' Enter
 
-tmux new-window -t db-compare-dev -n server
-# tmux send-keys 'cd ./db-compare-server/ && go build && ./db-compare-server' 'C-m'
+tmux new-window -t db-compare-dev:3 -n react-client -c $root/react-client
+tmux send-keys -t db-compare-dev:3 'npm run start' Enter 
 
-tmux new-window -t db-compare-dev -n react-client
-# tmux send-keys  'cd react-client &&  npm run start' 'C-m'
+tmux new-window -t db-compare-dev:4 -n postgres-db -c $root
+tmux send-keys  -t db-compare-dev:4 "./setup-postgres.sh" Enter 
 
-tmux new-window -t db-compare-dev -n postgres-db
-# tmux send-keys  'source setup-postgres.sh' 'C-m'
-
-      # tmux attach -t db-compare-dev
+# tmux attach -t db-compare-dev
