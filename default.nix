@@ -15,6 +15,7 @@ mkShell {
   tmux
   nodejs
   postgresql
+  inotify-tools
 
 ]
     ++ optional stdenv.isLinux inotify-tools # For file_system on Linux.
