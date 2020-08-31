@@ -26,6 +26,9 @@ mkShell {
     ]);
 
  shellHook = ''
-
+export PGDATA="$(pwd)/postgres"
+# Place Postgres' Unix socket inside the data directory
+export PGHOST="$PGDATA"
+echo $(pwd) entered & shell loaded
     '';
 }
