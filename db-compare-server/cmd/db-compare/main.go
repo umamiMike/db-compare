@@ -7,9 +7,17 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
+	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
+	"github.com/umamimike/db-compare/db-compare-server/pkg/storage/badger"
 )
 
 func main() {
+	var adder adding.Service
+
+	//setup storage
+	storageType := new(badger.Storage)
+	// storageType := j
+	//setup routing and handlers
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
@@ -28,8 +36,10 @@ func main() {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
+
 	fmt.Printf("server started at http://localhost%v/\n ", server.Addr)
 	r.Get("/", indexHandler)
 	r.Post("/datasources", datasourcesPostHandler)
 	panic(server.ListenAndServe())
+
 }
