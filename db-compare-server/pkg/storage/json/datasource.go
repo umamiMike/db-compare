@@ -1,7 +1,7 @@
 package storage
 
 type Datasource struct {
-	ID       string
+	ID       string `json:"id"`
 	Username string `json:"username"`
 	Hostname string `json:"host"`
 	Password string `json:"password"`

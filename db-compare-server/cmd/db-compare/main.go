@@ -12,7 +12,10 @@ import (
 )
 
 func main() {
+	//storage temporarily hard coded as badger
+	s := new(badger.Storage)
 	var adder adding.Service
+	fmt.Println(s, adder)
 
 	//setup storage
 	storageType := new(badger.Storage)

@@ -5,7 +5,6 @@ import (
 	"path"
 	"runtime"
 
-	"github.com/nanobox-io/golang-scribble"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
 )
