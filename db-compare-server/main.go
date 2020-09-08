@@ -31,6 +31,5 @@ func main() {
 	fmt.Printf("server started at http://localhost%v/\n ", server.Addr)
 	r.Get("/", indexHandler)
 	r.Post("/datasources", datasourcesPostHandler)
-	// r.Post("/queries", queriesPostHandler)
 	panic(server.ListenAndServe())
 }

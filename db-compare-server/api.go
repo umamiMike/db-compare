@@ -53,8 +53,6 @@ func datasourcesPostHandler(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	// storage.Set(ID, response)
-	// setJsonApiHeaders(w)
 	rs, _ := json.Marshal(resp)
 	fmt.Println(string(rs))
 	w.Write(rs)
