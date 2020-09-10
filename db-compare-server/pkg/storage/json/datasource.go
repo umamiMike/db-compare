@@ -1,4 +1,4 @@
-package storage
+package json
 
 type Datasource struct {
 	ID       string `json:"id"`

@@ -5,6 +5,7 @@ import (
 	"path"
 	"runtime"
 
+	scribble "github.com/nanobox-io/golang-scribble"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
 )
@@ -38,14 +39,13 @@ func NewStorage() (*Storage, error) {
 	return s, nil
 }
 
-// AddBeer saves the given beer to the repository
 func (s *Storage) AddDatasource(ds adding.Datasource) error {
-	id, err := storage.GenID("datasource")
+	id, err := storage.GenID()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	newDs := Datasource{
+	newDS := Datasource{
 		ID:       id,
 		Username: ds.Username,
 		Hostname: ds.Hostname,
@@ -53,7 +53,7 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 		DbName:   ds.DbName,
 	}
 
-	if err := s.db.Write(CollectionDatasource, newDs.ID, newDs); err != nil {
+	if err := s.db.Write(CollectionDatasource, newDS.ID, ds); err != nil {
 		return err
 	}
 	return nil

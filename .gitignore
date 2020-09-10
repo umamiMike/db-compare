@@ -3,3 +3,5 @@ app-db-data/
 postgres/
 # go src path used by nix-shell
 .go/
+
+**/badger-data/*
