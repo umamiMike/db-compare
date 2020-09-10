@@ -1,7 +1,10 @@
 package badger
 
 import (
+	"fmt"
 	"log"
+	"path"
+	"runtime"
 
 	"encoding/json"
 	"time"
@@ -9,6 +12,10 @@ import (
 	"github.com/dgraph-io/badger"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
+)
+
+const (
+	dir = "/badger-data/"
 )
 
 type Storage struct {
@@ -21,7 +28,10 @@ type Operation struct {
 	Op    byte
 }
 
-func NewStorage(storageDir string) (*Storage, error) {
+func NewStorage() (*Storage, error) {
+	_, filename, _, _ := runtime.Caller(0)
+	p := path.Dir(filename)
+	storageDir := fmt.Sprintf("%s%s", p, dir)
 	storage := &Storage{}
 	opts := badger.DefaultOptions(storageDir)
 	opts.SyncWrites = true

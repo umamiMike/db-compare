@@ -1,13 +1,11 @@
 package adding
 
 import (
-	// "github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"log"
 )
 
 type Service interface {
 	AddDatasource(...Datasource) error
-	AddList([]Datasource) error
 }
 
 //access to repository
