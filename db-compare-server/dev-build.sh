@@ -1,4 +1,5 @@
 #!/bin/bash
+cd cmd/db-compare-server
 
 build_cmd () {
 clear
