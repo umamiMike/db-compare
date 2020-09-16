@@ -2,17 +2,38 @@ package rest
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 
-	"github.com/umamimike/db-compare/db-compare-server/db"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/cors"
+	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 )
-
-var storageDir = "app-db-data/"
 
 type msi = map[string]interface{}
 
 //Convenience for typing
+func Handler(a adding.Service) *chi.Mux {
+	//setup routing and handlers
+	r := chi.NewRouter()
+
+	r.Use(cors.Handler(cors.Options{
+		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
+		AllowedOrigins: []string{"*"},
+		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: false,
+		MaxAge:           300, // Maximum value not ignored by any of major browsers
+	}))
+
+	r.Get("/", indexHandler)
+	r.Post("/datasources", datasourcesPostHandler(a))
+
+	return r
+
+}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	response := msi{
@@ -32,50 +53,33 @@ type Data struct {
 
 // ------------- datasource --------------------
 
-func datasourcesPostHandler(w http.ResponseWriter, r *http.Request) {
+func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-	storage := db.NewBadger(storageDir)
-	defer storage.Close()
+		var newDatasource adding.Datasource
+		decoder := json.NewDecoder(r.Body)
+		err := decoder.Decode(&newDatasource)
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	var dsr DatasourceCredentials
-	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&dsr)
+		// log.Printf("the decoded params from the request are!!!!   %v", newDatasource)
+		// addingerr := s.AddDatasource(newDatasource)
+		// if addingerr != nil {
+		// 	http.Error(w, addingerr.Error(), http.StatusBadRequest)
+		// 	return
+		// }
+		ID, _ := newUUID()
+		resp := &Data{
+			Id:   ID,
+			Type: "datasource",
+			Attributes: msi{
+				"username": newDatasource.Username,
+				"hostname": newDatasource.Hostname,
+				"dbname":   newDatasource.DbName,
+			},
+		}
 
-	ID, _ := newUUID()
-	// passing the input data back to the output
-	resp := &Data{
-		Id:   ID,
-		Type: "datasource",
-		Attributes: msi{
-			"username": dsr.Username,
-			"hostname": dsr.Hostname,
-			"dbname":   dsr.DbName,
-		},
+		json.NewEncoder(w).Encode(resp)
 	}
-
-	rs, _ := json.Marshal(resp)
-	fmt.Println(string(rs))
-	w.Write(rs)
-}
-
-func dsGetHandler() {}
-
-func queriesPostHandler(w http.ResponseWriter, r *http.Request) {
-
-	var query string
-	decoder := json.NewDecoder(r.Body)
-	decoder.Decode(&query)
-
-	ID, _ := newUUID()
-	// passing the input data back to the output
-	response := &Data{
-		Id:   ID,
-		Type: "query",
-		Attributes: msi{
-			"query_string": query,
-			"datasource":   "somedatasource",
-		},
-	}
-	setJsonApiHeaders(w)
-	json.NewEncoder(w).Encode(response)
 }
