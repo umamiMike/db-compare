@@ -1,1 +1,4 @@
-.mw-wiki/
+app-db-data/
+postgres/
+# go src path used by nix-shell
+.go/

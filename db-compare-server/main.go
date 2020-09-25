@@ -9,21 +9,8 @@ import (
 	"github.com/go-chi/cors"
 )
 
-const serverport = ":9099"
-
-type conf struct {
-	Dbs         []conndata `json:"dbs"`
-	Server_port string     `json:"server_port"`
-}
-
-type conndata struct {
-	Name string `json:"name"`
-	Conn string `json:"conn"`
-}
-
 func main() {
 	r := chi.NewRouter()
-	//TODO: manage this more correctly
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"*"},
@@ -41,10 +28,8 @@ func main() {
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
-	fmt.Printf("server  started at http://localhost%v/\n ", server.Addr)
-
-	r.Post("/datasources", datasourcesHandler)
-	r.Post("/queries", queriesPostHandler)
+	fmt.Printf("server started at http://localhost%v/\n ", server.Addr)
+	r.Get("/", indexHandler)
+	r.Post("/datasources", datasourcesPostHandler)
 	panic(server.ListenAndServe())
-	fmt.Println("running on http://localhost:9099")
 }

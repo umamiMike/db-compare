@@ -2,9 +2,18 @@ package main
 
 import (
 	"encoding/json"
-	"log"
 	"os"
 )
+
+type conf struct {
+	Dbs         []conndata `json:"dbs"`
+	Server_port string     `json:"server_port"`
+}
+
+type conndata struct {
+	Name string `json:"name"`
+	Conn string `json:"conn"`
+}
 
 func (c *conf) get(filename string) *conf {
 	fc, err := os.Open(filename)
@@ -12,7 +21,6 @@ func (c *conf) get(filename string) *conf {
 	decoder := json.NewDecoder(fc)
 	decoder.Decode(&c)
 	if err != nil {
-		log.Println(err)
 	}
 	return c
 
