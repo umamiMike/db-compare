@@ -77,9 +77,9 @@ func (storage *Storage) Set(key string, value []byte) (err error) {
 
 }
 
-func (db *Storage) Write(key string, data []byte) {
+func (storage *Storage) Write(key string, data []byte) {
 
-	err := db.Set(key, data)
+	err := storage.Set(key, data)
 	if err != nil {
 		log.Fatal(err)
 	}
