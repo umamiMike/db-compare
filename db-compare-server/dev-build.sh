@@ -1,9 +1,11 @@
-#!/bin/bash
-go get 
+#/bin/bash
+go get -u
+cd cmd/db-compare-server
+
 
 build_cmd () {
 clear
-$(go build) > /dev/null && printf "\e[1m\e[36mapp rebuilt successfully\e[0m\n\n" || printf "\n\n\e[1m[91mrebuild failed\n\n"
+$(go build -o ./dev/server) > /dev/null && printf "\e[1m\e[36mapp rebuilt successfully\e[0m\n\n" || printf "\n\n\e[1m[91mrebuild failed\n\n"
 ./db-compare-server & 
 disown
 }
