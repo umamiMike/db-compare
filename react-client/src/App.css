@@ -1,13 +1,13 @@
+:root {
+  --placeholder: #b05441;
+}
 body {
   margin: 0;
   font-family: sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 h1,
 h2 {
@@ -26,8 +26,25 @@ a {
 }
 form {
   margin: auto;
-  width: 50%;
 }
+.db-creds {
+  width: 50%;
+  margin-bottom: 16px;
+}
+input[type='text'],
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+::placeholder {
+  color: var(--placeholder);
+}
+
 #replacequery_cont {
   float: none;
 }

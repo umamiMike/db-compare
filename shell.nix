@@ -21,6 +21,8 @@ mkShell {
 
 shellHook = ''
   export GOPATH="$(pwd)/.go"
+  export GOBIN="$GOPATh/.go/bin"
+  export PATH=$GOPATh/.go/bin:$PATH
   exportGOCACHE=""
   export PATH="$(pwd)/react-client/node_modules/.bin/:$PATH"
   export PGDATA="$(pwd)/postgres"

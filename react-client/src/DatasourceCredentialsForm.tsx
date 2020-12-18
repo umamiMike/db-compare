@@ -13,9 +13,9 @@ export default function DatasourceCredentialsForm(props: Props) {
   const [formdata, setFormData] = useState(creds);
 
   return (
-    <div>
+    <div className='db-creds'>
+      <h1>database credentials</h1>
       <form>
-        <label>database</label>
         <input
           type='text'
           placeholder='database name'
@@ -25,7 +25,6 @@ export default function DatasourceCredentialsForm(props: Props) {
           }}
         />
         <br />
-        <label>username</label>
         <input
           type='text'
           placeholder='username'
@@ -35,7 +34,6 @@ export default function DatasourceCredentialsForm(props: Props) {
           }}
         />
         <br />
-        <label>host</label>
         <input
           type='text'
           placeholder='host'
@@ -44,7 +42,6 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-        <label>password</label>
         <input
           type='text'
           placeholder='password'

@@ -63,12 +63,6 @@ func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *htt
 			log.Fatal(err)
 		}
 
-		// log.Printf("the decoded params from the request are!!!!   %v", newDatasource)
-		// addingerr := s.AddDatasource(newDatasource)
-		// if addingerr != nil {
-		// 	http.Error(w, addingerr.Error(), http.StatusBadRequest)
-		// 	return
-		// }
 		ID, _ := newUUID()
 		resp := &Data{
 			Id:   ID,
