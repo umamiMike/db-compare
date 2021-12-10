@@ -31,19 +31,3 @@ func main() {
 
 }
 
-func addDatasourceFake(adder adding.Service, s *badger.Storage) {
-
-	adr := adding.NewService(s)
-	defaultDatasource := adding.Datasource{
-		Username: "postgresUser",
-		Hostname: "localhost",
-		Password: "passwd1",
-		DbName:   "awesome-production",
-	}
-	fmt.Println(defaultDatasource)
-	err := adr.AddDatasource(defaultDatasource)
-
-	if err != nil {
-		fmt.Println("there was an error", err)
-	}
-}
