@@ -33,16 +33,16 @@ form {
 }
 
 .queryinput {
-  background: rgb(240, 240, 240);
-  font-family: inherit;
-  margin: 16px;
-  padding: 16px;
+   /* background: rgb(240, 240, 240); */
+   /* font-family: inherit; */
+   /* margin: 16px; */
+   /* padding: 16px; */
 }
 .header {
-  padding: 16px;
-  margin: -1px;
-  border: 1px;
-  border-color: black;
+   /* padding: 16px; */
+   /* margin: -1px; */
+   /* border: 1px; */
+   /* border-color: black; */
 }
 .field-checklist .wrapper {
 }

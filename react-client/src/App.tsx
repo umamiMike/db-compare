@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import './App.css';
+
+import './css/reset.css';
+ /* import './App.css'; */
 import DatasourceCredentialsForm from './DatasourceCredentialsForm';
 import TextArea from './TextArea';
 
@@ -74,8 +76,9 @@ export default function App() {
   };
 
   return (
-    <div className='App'>
+    <div className='main'>
       <DatasourceCredentialsForm creds={initCreds} onSubmit={handleSubmit} />
+      <form>
       <TextArea name='query' onChange={e => setQuery(e.target.value)} />
       <button
         onClick={() => {
@@ -85,7 +88,7 @@ export default function App() {
         {' '}
         query the db
       </button>
-
+      </form>
       <h1>{query}</h1>
     </div>
   );

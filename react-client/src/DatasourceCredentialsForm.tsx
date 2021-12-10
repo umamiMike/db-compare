@@ -13,7 +13,7 @@ export default function DatasourceCredentialsForm(props: Props) {
   const [formdata, setFormData] = useState(creds);
 
   return (
-    <div>
+    <div className="ds-select">
       <form>
         <label>database</label>
         <input
@@ -24,7 +24,6 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-        <br />
         <label>username</label>
         <input
           type='text'
@@ -34,7 +33,6 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-        <br />
         <label>host</label>
         <input
           type='text'
@@ -53,7 +51,6 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-      </form>
       <button
         onClick={() => {
           submitFormData(formdata);
@@ -62,6 +59,7 @@ export default function DatasourceCredentialsForm(props: Props) {
         {' '}
         submit
       </button>
+      </form>
     </div>
   );
 }
