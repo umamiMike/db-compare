@@ -1,5 +1,6 @@
 app-db-data/
-postgres/
+data/postgres/
+data/postgres_data/
 # go src path used by nix-shell
 .go/
 
