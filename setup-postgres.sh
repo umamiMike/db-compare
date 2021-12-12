@@ -1,24 +1,15 @@
-# make the data directory if needed 
-mkdir -p postgres
-# necessary env vars
-export PGDATA="$(pwd)/postgres"
-# Place Postgres' Unix socket inside the data directory
-export PGHOST="$PGDATA"
+#!/bin/env nix-shell
+# inits if non existant and starts the process, stops on shell exit
+   if [[ ! -d $PGHOST ]]; then
+   echo "creating pghost directory"
+      mkdir -p $PGHOST
+    fi
 
-# initialize the db
-initdb
+    if [[ ! -d $PGDATA ]]; then
+      echo 'Initializing postgresql database...'
+      initdb $PGDATA --auth=trust >/dev/null
+    fi
 
-# add the appropriate configuration file
-cat > "$PGDATA/postgresql.conf" <<EOF
-listen_addresses = 'localhost'
-port = 5432
-unix_socket_directories = '$PGHOST'
-EOF
+pg_ctl start -l $LOG_PATH -o "-c listen_addresses= -c unix_socket_directories=$PGHOST"
 
-# create the base db
-echo "CREATE DATABASE postgres;" | postgres --single -E postgres
-# create the user
-echo "CREATE USER postgres --createdb;" | postgres --single -E postgres
-
-# start the instance
-postgres
+ trap "pg_ctl stop" EXIT

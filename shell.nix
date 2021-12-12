@@ -1,14 +1,13 @@
-{ pkgs ? import <nixpkgs> {} }:
+with import <nixpkgs> {};
 
-with pkgs;
+stdenv.mkDerivation {
+  name = "db-compare-umbrella";
 
-let
   postgresql = postgresql_10;
+  PROJECT_ROOT = builtins.toString ./.;
+  LOCALE_ARCHIVE_2_27 = "${glibcLocales}/lib/locale/locale-archive";
 
-in
-mkShell {
-
-  buildInputs = [
+  buildInputs = with pkgs; [
   bash
   go
   goimports
@@ -20,12 +19,17 @@ mkShell {
 ];
 
 shellHook = ''
-  export GOPATH="$(pwd)/.go"
-  exportGOCACHE=""
-  export PATH="$(pwd)/react-client/node_modules/.bin/:$PATH"
-  export PGDATA="$(pwd)/postgres"
-  export PGHOST="$PGDATA"
-  zsh
+  export GOPATH="/home/mike/dev/.go"
+  export GOCACHE=""
+  export PATH="$PROJECT_ROOT/react-client/node_modules/.bin/:$PATH"
+
+  export PGDATA="$PROJECT_ROOT/data/postgres_data"
+  export PGHOST="$PROJECT_ROOT/data/postgres"
+  export LOG_PATH="$PROJECT_ROOT/data/postgres/LOG"
+  export PGDATABASE=postgres
+  export DATABASE_URL="postgresql?host=$PGHOST"
+
+. ./setup-postgres.sh
 
  '';
 }
