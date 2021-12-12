@@ -10,6 +10,7 @@ export default function App() {
   const [query, setQuery] = useState('');
 
   const initCreds = {
+    type: '',
     username: '',
     host: '',
     password: '',
@@ -89,7 +90,6 @@ export default function App() {
         query the db
       </button>
       </form>
-      <h1>{query}</h1>
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { DsCreds } from './credentials';
-import './App.css';
 
 interface Props {
   creds: DsCreds;
@@ -15,7 +14,8 @@ export default function DatasourceCredentialsForm(props: Props) {
   return (
     <div className="ds-select">
       <form>
-        <label>database</label>
+      <label>
+      db name
         <input
           type='text'
           placeholder='database name'
@@ -24,7 +24,8 @@ export default function DatasourceCredentialsForm(props: Props) {
             setFormData(formdata);
           }}
         />
-        <label>username</label>
+          </label>
+        <label>username
         <input
           type='text'
           placeholder='username'
@@ -32,8 +33,9 @@ export default function DatasourceCredentialsForm(props: Props) {
             formdata.username = e.target.value;
             setFormData(formdata);
           }}
-        />
-        <label>host</label>
+          />
+          </label>
+        <label>host
         <input
           type='text'
           placeholder='host'
@@ -41,16 +43,16 @@ export default function DatasourceCredentialsForm(props: Props) {
             formdata.host = e.target.value;
             setFormData(formdata);
           }}
-        />
-        <label>password</label>
-        <input
+        /></label>
+        <label>password        <input
           type='text'
           placeholder='password'
           onChange={e => {
             formdata.password = e.target.value;
             setFormData(formdata);
           }}
-        />
+        /></label>
+
       <button
         onClick={() => {
           submitFormData(formdata);

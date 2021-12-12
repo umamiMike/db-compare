@@ -171,33 +171,49 @@ img {
 
  /* ======= custom ======== */
 
+.main input, textarea, select, button {
+  width : 50%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+}
+.main textarea {
+width: 100%;
+}
 
 .main button {
   padding: 0.5em;
   border: 1px solid var(--secondary);
+  border-radius: 6px;
+  background: #ffaaaa;
+  margin: 4px;
+
 }
+
+
 
 .main form {
 
   border: 1px solid var(--secondary);
+  position: relative;
 
+  width: 400px;
+  padding: 6px;
   margin: 4px;
-}
-
-.ds-select {
-
- /* width: 400px; */
-}
-.ds-select * {display: block;}
-.ds-select form {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
+.ds-select label {
+  padding: 6px;
+  width: 100%;
+}
 
+form input {
 
-
-
+}
 
 
 
