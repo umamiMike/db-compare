@@ -17,7 +17,7 @@ require (
 	github.com/jcelliott/lumber v0.0.0-20160324203708-dd349441af25 // indirect
 	github.com/katzien/go-structure-examples v0.0.0-20200517211633-f3e3f59c4c5e
 	github.com/lib/pq v1.8.0 // indirect
-	github.com/mattermost/mattermost-server/v5 v5.19.1 // indirect
+	github.com/mattermost/mattermost-server/v5 v5.39 // indirect
 	github.com/nanobox-io/golang-scribble v0.0.0-20190309225732-aa3e7c118975
 	github.com/recursionpharma/go-csv-map v0.0.0-20160524001940-792523c65ae9
 	github.com/stretchr/testify v1.4.0
