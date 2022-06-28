@@ -6,12 +6,13 @@ import (
 
 type Service interface {
 	AddDatasource(...Datasource) error
-	ViewAll() error
+	GetAll() error
 }
 
 //access to repository
 type Repository interface {
 	AddDatasource(Datasource) error
+	GetAll() error
 }
 type service struct {
 	r Repository
@@ -42,8 +43,8 @@ func (s *service) AddList(dsl []Datasource) error {
 	}
 	return nil
 }
-func (s *service) ViewAll() error {
-s.ViewAll()
+func (s *service) GetAll() error {
+s.r.GetAll()
 // log.Println("view all datasources")
 
 return nil

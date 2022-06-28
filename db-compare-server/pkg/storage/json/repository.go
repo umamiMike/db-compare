@@ -1,13 +1,13 @@
 package json
 
 import (
-	"log"
-	"path"
-	"runtime"
-
+	"encoding/json"
 	scribble "github.com/nanobox-io/golang-scribble"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
+	"log"
+	"path"
+	"runtime"
 )
 
 const (
@@ -40,6 +40,7 @@ func NewStorage() (*Storage, error) {
 }
 
 func (s *Storage) AddDatasource(ds adding.Datasource) error {
+
 	id, err := storage.GenID()
 	if err != nil {
 		log.Fatal(err)
@@ -53,8 +54,29 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 		DbName:   ds.DbName,
 	}
 
-	if err := s.db.Write(CollectionDatasource, newDS.ID, ds); err != nil {
+	if err := s.db.Write(CollectionDatasource, id, newDS); err != nil {
 		return err
 	}
+	return nil
+}
+
+func (s *Storage) GetAll() error {
+	records, err := s.db.ReadAll(CollectionDatasource)
+	log.Println(records)
+	if err != nil {
+		log.Println(err)
+
+	}
+
+	datasources := []Datasource{}
+	for _, f := range records {
+		dsFound := Datasource{}
+		if err := json.Unmarshal([]byte(f), &dsFound); err != nil {
+			log.Println(err)
+		}
+		datasources = append(datasources, dsFound)
+
+	}
+	log.Println(datasources)
 	return nil
 }

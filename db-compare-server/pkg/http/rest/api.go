@@ -75,6 +75,8 @@ func datasourcesPostHandler(s adding.Service ) func(w http.ResponseWriter, r *ht
 		}
 		s.AddDatasource(newDatasource)
 		log.Println("db stored the thing")
+		dses := s.GetAll()
+		log.Println(dses)
 
 		json.NewEncoder(w).Encode(resp)
 	}
