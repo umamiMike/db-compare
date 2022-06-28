@@ -67,6 +67,31 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 	return nil
 }
 
+func (s *Storage) ViewAll() error {
+
+	s.runStorageGC()
+// s.db.View(func(txn *badger.Txn) error {
+//   it := txn.NewIterator(badger.DefaultIteratorOptions)
+//   defer it.Close()
+//   prefix := []byte("1234")
+//   for it.Seek(prefix); it.ValidForPrefix(prefix); it.Next() {
+//     item := it.Item()
+//     k := item.Key()
+//     err := item.Value(func(v []byte) error {
+//       fmt.Printf("key=%s, value=%s\n", k, v)
+//       return nil
+//     })
+//     if err != nil {
+//       return err
+//     }
+//   }
+//   return nil
+// })
+ return nil
+}
+
+
+
 //====================== boilerplate =========================================//
 // Set adds a key-value pair to the database
 func (storage *Storage) Set(key string, value []byte) (err error) {

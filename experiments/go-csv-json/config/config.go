@@ -19,6 +19,12 @@ type Config struct {
 	Headers  []Header `json:"headers"`
 }
 
+func isJSON(str string) bool {
+    var js json.RawMessage
+    return json.Unmarshal([]byte(str), &js) == nil
+}
+
+
 func LoadConfig(c string) (Config, error) {
 	var config Config
 	cfile, err := os.Open(c)

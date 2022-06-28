@@ -37,7 +37,7 @@ func Handler(a adding.Service) *chi.Mux {
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	response := msi{
-		"data": "stub",
+		"data": "stubby",
 	}
 	json.NewEncoder(w).Encode(response)
 
@@ -53,14 +53,14 @@ type Data struct {
 
 // ------------- datasource --------------------
 
-func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request) {
+func datasourcesPostHandler(s adding.Service ) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var newDatasource adding.Datasource
 		decoder := json.NewDecoder(r.Body)
 		err := decoder.Decode(&newDatasource)
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
 		}
 
 		ID, _ := newUUID()
@@ -73,6 +73,8 @@ func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *htt
 				"dbname":   newDatasource.DbName,
 			},
 		}
+		s.AddDatasource(newDatasource)
+		log.Println("db stored the thing")
 
 		json.NewEncoder(w).Encode(resp)
 	}
