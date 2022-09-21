@@ -2,12 +2,13 @@ package json
 
 import (
 	"encoding/json"
-	scribble "github.com/nanobox-io/golang-scribble"
-	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
-	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
 	"log"
 	"path"
 	"runtime"
+
+	scribble "github.com/nanobox-io/golang-scribble"
+	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
+	"github.com/umamimike/db-compare/db-compare-server/pkg/storage"
 )
 
 const (
@@ -60,12 +61,10 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 	return nil
 }
 
-func (s *Storage) GetAll() error {
+func (s *Storage) GetAll() string {
 	records, err := s.db.ReadAll(CollectionDatasource)
-	log.Println(records)
 	if err != nil {
 		log.Println(err)
-
 	}
 
 	datasources := []Datasource{}
@@ -77,6 +76,5 @@ func (s *Storage) GetAll() error {
 		datasources = append(datasources, dsFound)
 
 	}
-	log.Println(datasources)
-	return nil
+	return "woo hoo"
 }

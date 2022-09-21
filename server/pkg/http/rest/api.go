@@ -2,6 +2,7 @@ package rest
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -29,6 +30,7 @@ func Handler(a adding.Service) *chi.Mux {
 	}))
 
 	r.Get("/", indexHandler)
+	r.Get("/datasources", dsGetHandler(a))
 	r.Post("/datasources", datasourcesPostHandler(a))
 
 	return r
@@ -51,9 +53,25 @@ type Data struct {
 	Attributes msi    `json:"attributes"`
 }
 
+type DatasourceList struct {
+	Type        string `json:"type"`
+	Datasources string `json:"datasources"`
+}
+
 // ------------- datasource --------------------
 
-func datasourcesPostHandler(s adding.Service ) func(w http.ResponseWriter, r *http.Request) {
+func dsGetHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request) {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		dses := s.GetAll()
+		fmt.Println(dses)
+		resp := &DatasourceList{Type: "datasource", Datasources: ""}
+
+		json.NewEncoder(w).Encode(resp)
+	}
+}
+
+func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		var newDatasource adding.Datasource

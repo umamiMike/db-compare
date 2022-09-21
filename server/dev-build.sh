@@ -1,5 +1,4 @@
 #!/bin/bash
-go get 
 
 build_cmd () {
 clear

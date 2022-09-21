@@ -1,6 +1,7 @@
 package adding
 
 import (
+	"fmt"
 	"log"
 )
 
@@ -12,7 +13,7 @@ type Service interface {
 //access to repository
 type Repository interface {
 	AddDatasource(Datasource) error
-	GetAll() error
+	GetAll() string
 }
 type service struct {
 	r Repository
@@ -23,7 +24,6 @@ func NewService(r Repository) Service {
 	log.Println(r)
 	return &service{r}
 }
-
 
 func (s *service) AddDatasource(ds ...Datasource) error {
 	for _, d := range ds {
@@ -44,8 +44,8 @@ func (s *service) AddList(dsl []Datasource) error {
 	return nil
 }
 func (s *service) GetAll() error {
-s.r.GetAll()
-// log.Println("view all datasources")
+	fmt.Println(s.r.GetAll())
+	log.Println("view all datasources")
 
-return nil
+	return nil
 }
