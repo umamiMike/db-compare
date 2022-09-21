@@ -17,13 +17,14 @@ export default function App() {
     dbName: '',
   };
 
-  const handleSubmit = (formdata: any) => {
+  const handleSubmit = () => {
+    let formdata = query;
     fetch(api + '/datasources', {
       method: 'POST',
       body: JSON.stringify({
         data: {
           type: 'datasource',
-          attributes: { ...formdata },
+          attributes: query,
         },
       }),
     })
@@ -45,6 +46,7 @@ export default function App() {
   };
 
   const handleQuery = () => {
+
     console.log(query);
 
     fetch(api + '/queries', {
