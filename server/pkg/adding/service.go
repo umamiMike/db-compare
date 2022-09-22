@@ -1,19 +1,18 @@
 package adding
 
 import (
-	"fmt"
 	"log"
 )
 
 type Service interface {
 	AddDatasource(...Datasource) error
-	GetAll() error
+	GetAll() []Datasource
 }
 
 //access to repository
 type Repository interface {
 	AddDatasource(Datasource) error
-	GetAll() string
+	GetAll() []Datasource
 }
 type service struct {
 	r Repository
@@ -43,9 +42,7 @@ func (s *service) AddList(dsl []Datasource) error {
 	}
 	return nil
 }
-func (s *service) GetAll() error {
-	fmt.Println(s.r.GetAll())
-	log.Println("view all datasources")
+func (s *service) GetAll() []Datasource {
+	return s.r.GetAll()
 
-	return nil
 }

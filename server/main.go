@@ -9,7 +9,6 @@ import (
 	"github.com/umamimike/db-compare/db-compare-server/pkg/adding"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/http/rest"
 	"github.com/umamimike/db-compare/db-compare-server/pkg/storage/json"
-
 )
 
 func main() {
@@ -31,4 +30,3 @@ func main() {
 	panic(server.ListenAndServe())
 
 }
-

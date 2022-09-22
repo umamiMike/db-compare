@@ -13,7 +13,6 @@ stdenv.mkDerivation {
   goimports
   fswatch
   vgo2nix
-  tmux
   nodejs
   postgresql
 ];
@@ -28,8 +27,6 @@ shellHook = ''
   export LOG_PATH="$PROJECT_ROOT/data/postgres/LOG"
   export PGDATABASE=postgres
   export DATABASE_URL="postgresql?host=$PGHOST"
-
-. ./setup-postgres.sh
 
  '';
 }

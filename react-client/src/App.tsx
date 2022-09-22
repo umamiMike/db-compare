@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 
 import './css/reset.css';
- /* import './App.css'; */
+/* import './App.css'; */
 import DatasourceCredentialsForm from './DatasourceCredentialsForm';
+import DatasourceList from './DatasourceList';
 import TextArea from './TextArea';
 
 export default function App() {
@@ -16,9 +17,30 @@ export default function App() {
     password: '',
     dbName: '',
   };
+  const handleGetAll = () => {
+    const formdata = query;
+    fetch(api + '/datasources', {
+      method: 'GET',
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response;
+      })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(data => {
+        return data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
 
   const handleSubmit = () => {
-    let formdata = query;
+    const formdata = query;
     fetch(api + '/datasources', {
       method: 'POST',
       body: JSON.stringify({
@@ -46,7 +68,6 @@ export default function App() {
   };
 
   const handleQuery = () => {
-
     console.log(query);
 
     fetch(api + '/queries', {
@@ -80,17 +101,18 @@ export default function App() {
 
   return (
     <div className='main'>
+      <DatasourceList creds={initCreds} onSubmit={handleGetAll} />
       <DatasourceCredentialsForm creds={initCreds} onSubmit={handleSubmit} />
       <form>
-      <TextArea name='query' onChange={e => setQuery(e.target.value)} />
-      <button
-        onClick={() => {
-          handleQuery();
-        }}
-      >
-        {' '}
-        query the db
-      </button>
+        <TextArea name='query' onChange={e => setQuery(e.target.value)} />
+        <button
+          onClick={() => {
+            handleQuery();
+          }}
+        >
+          {' '}
+          query the db
+        </button>
       </form>
     </div>
   );

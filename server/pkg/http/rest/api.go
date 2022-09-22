@@ -54,8 +54,8 @@ type Data struct {
 }
 
 type DatasourceList struct {
-	Type        string `json:"type"`
-	Datasources string `json:"datasources"`
+	Type        string   `json:"type"`
+	Datasources []string `json:"datasources"`
 }
 
 // ------------- datasource --------------------
@@ -63,9 +63,20 @@ type DatasourceList struct {
 func dsGetHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request) {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		dses := s.GetAll()
-		fmt.Println(dses)
-		resp := &DatasourceList{Type: "datasource", Datasources: ""}
+		dees := s.GetAll()
+		fmt.Println("dees: ", dees)
+
+		// var xformed []string
+		// for _, el := range dees {
+		// 	buf := new(bytes.Buffer)
+		// 	if err := json.Compact(buf, []byte(el)); err != nil {
+		// 		fmt.Println(err)
+		// 	}
+		// 	xformed = append(xformed, buf.String())
+
+		// }
+		foo := []string{"foo", "bar"}
+		resp := &DatasourceList{Type: "datasource", Datasources: foo}
 
 		json.NewEncoder(w).Encode(resp)
 	}
