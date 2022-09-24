@@ -1,7 +1,11 @@
 package adding
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 type Service interface {
@@ -12,7 +16,7 @@ type Service interface {
 //access to repository
 type Repository interface {
 	AddDatasource(Datasource) error
-	GetAll() []Datasource
+	GetAll() ([]string, error)
 }
 type service struct {
 	r Repository
@@ -26,6 +30,8 @@ func NewService(r Repository) Service {
 
 func (s *service) AddDatasource(ds ...Datasource) error {
 	for _, d := range ds {
+		fmt.Println("d in add datasource")
+		spew.Dump(d)
 		err := s.r.AddDatasource(d)
 		if err != nil {
 			log.Println("couldnt add datasource")
@@ -43,6 +49,16 @@ func (s *service) AddList(dsl []Datasource) error {
 	return nil
 }
 func (s *service) GetAll() []Datasource {
-	return s.r.GetAll()
+
+	dsses, _ := s.r.GetAll()
+	var outds []Datasource
+	// converting to adding.Datasource for correct encoding
+	for _, el := range dsses {
+		var ds Datasource
+		json.Unmarshal([]byte(el), &ds)
+		outds = append(outds, ds)
+	}
+
+	return outds
 
 }

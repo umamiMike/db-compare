@@ -2,7 +2,6 @@ package rest
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -21,8 +20,7 @@ func Handler(a adding.Service) *chi.Mux {
 	r.Use(cors.Handler(cors.Options{
 		// AllowedOrigins: []string{"https://foo.com"}, // Use this to allow specific origin hosts
 		AllowedOrigins: []string{"*"},
-		// AllowOriginFunc:  func(r *http.Request,norigin string) bool { return true },
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		// AllowOriginFunc:  func(r *http.Request,norigin string) bool { return true }, AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
@@ -54,8 +52,8 @@ type Data struct {
 }
 
 type DatasourceList struct {
-	Type        string   `json:"type"`
-	Datasources []string `json:"datasources"`
+	Type        string              `json:"type"`
+	Datasources []adding.Datasource `json:"datasources"`
 }
 
 // ------------- datasource --------------------
@@ -64,19 +62,7 @@ func dsGetHandler(s adding.Service) func(w http.ResponseWriter, r *http.Request)
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		dees := s.GetAll()
-		fmt.Println("dees: ", dees)
-
-		// var xformed []string
-		// for _, el := range dees {
-		// 	buf := new(bytes.Buffer)
-		// 	if err := json.Compact(buf, []byte(el)); err != nil {
-		// 		fmt.Println(err)
-		// 	}
-		// 	xformed = append(xformed, buf.String())
-
-		// }
-		foo := []string{"foo", "bar"}
-		resp := &DatasourceList{Type: "datasource", Datasources: foo}
+		resp := &DatasourceList{Type: "datasource", Datasources: dees}
 
 		json.NewEncoder(w).Encode(resp)
 	}
@@ -103,10 +89,6 @@ func datasourcesPostHandler(s adding.Service) func(w http.ResponseWriter, r *htt
 			},
 		}
 		s.AddDatasource(newDatasource)
-		log.Println("db stored the thing")
-		dses := s.GetAll()
-		log.Println(dses)
-
 		json.NewEncoder(w).Encode(resp)
 	}
 }

@@ -1,7 +1,6 @@
 package json
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"path"
@@ -19,6 +18,11 @@ const (
 	// CollectionDatasource identifier for the JSON collection of beers
 	CollectionDatasource = "datasource"
 )
+
+type Repository interface {
+	AddDatasource(Datasource) error
+	GetAll() ([]string, error)
+}
 
 // Storage stores beer data in JSON files
 type Storage struct {
@@ -49,7 +53,6 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 	}
 
 	newDS := Datasource{
-		ID:       id,
 		Username: ds.Username,
 		Hostname: ds.Hostname,
 		Password: ds.Password,
@@ -62,22 +65,13 @@ func (s *Storage) AddDatasource(ds adding.Datasource) error {
 	return nil
 }
 
-func (s *Storage) GetAll() []Datasource {
+func (s *Storage) GetAll() ([]string, error) {
 	records, err := s.db.ReadAll(CollectionDatasource)
 	if err != nil {
-		log.Println(err)
+		return nil, err
 	}
+	fmt.Println("get all ")
+	fmt.Println(records)
+	return records, nil
 
-	datasources := []Datasource{}
-	for _, f := range records {
-		dsFound := Datasource{}
-		if err := json.Unmarshal([]byte(f), &dsFound); err != nil {
-			log.Println(err)
-		}
-		fmt.Println(dsFound)
-		datasources = append(datasources, dsFound)
-
-	}
-
-	return datasources
 }
