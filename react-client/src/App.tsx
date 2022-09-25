@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { api } from './api-client'
 
 import './css/reset.css';
 /* import './App.css'; */
@@ -7,10 +8,9 @@ import DatasourceList from './DatasourceList';
 import TextArea from './TextArea';
 
 export default function App() {
-  const api = 'http://localhost:9099';
   const [query, setQuery] = useState('');
 
-  const initCreds = {
+  const initCreds: DatasourceCredentials = {
     type: '',
     username: '',
     host: '',
@@ -41,6 +41,7 @@ export default function App() {
 
   const handleSubmit = () => {
     const formdata = query;
+    console.log(query);
     fetch(api + '/datasources', {
       method: 'POST',
       body: JSON.stringify({

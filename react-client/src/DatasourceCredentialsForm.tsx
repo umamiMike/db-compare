@@ -1,15 +1,45 @@
 import React, { useState } from 'react';
-import { DsCreds } from './credentials';
+import { api } from './api-client'
 
-interface Props {
-  creds: DsCreds;
+type Props =  {
+  creds: DatasourceCredentials;
   onSubmit: any;
 }
+
+const handleSubmit = (query: any) => {
+  const formdata = query;
+
+  fetch(api + '/datasources', {
+  method: 'POST',
+    body: JSON.stringify({
+      data: {
+        type: 'datasource',
+        attributes: query,
+      },
+    }),
+  })
+    .then(function (response) {
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      return response;
+    })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(data => {
+      return data;
+    })
+    .catch(error => {
+      console.log(error);
+    });
+};
 
 export default function DatasourceCredentialsForm(props: Props) {
   const { creds, onSubmit } = props;
   const submitFormData = onSubmit;
   const [formdata, setFormData] = useState(creds);
+  console.log(formdata);
 
   return (
     <div className='ds-select'>

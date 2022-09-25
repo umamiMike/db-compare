@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { DsCreds } from './credentials';
 
 interface Props {
-  creds: DsCreds;
+  creds: DatasourceCredentials;
   onSubmit: any;
 }
 
