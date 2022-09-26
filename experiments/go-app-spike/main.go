@@ -15,6 +15,7 @@ type hello struct {
 }
 
 func (h *hello) helloComponent() app.HTMLP {
+	evald := foo{Foo: "Foo foo string"}
 	return app.P().Body(
 		app.Input().
 			Type("text").
@@ -28,6 +29,7 @@ func (h *hello) helloComponent() app.HTMLP {
 			Placeholder("What is your foo?").
 			AutoFocus(true).
 			OnChange(h.ValueTo(&h.bar)),
+		app.Text(evald.evaluate().evaluated),
 	)
 }
 
