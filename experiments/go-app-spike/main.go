@@ -14,9 +14,26 @@ type hello struct {
 	bar  string
 }
 
+func (h *hello) helloComponent() app.HTMLP {
+	return app.P().Body(
+		app.Input().
+			Type("text").
+			Value(h.name).
+			Placeholder("What is your name?").
+			AutoFocus(true).
+			OnChange(h.ValueTo(&h.name)),
+		app.Input().
+			Type("text").
+			Value(h.bar).
+			Placeholder("What is your foo?").
+			AutoFocus(true).
+			OnChange(h.ValueTo(&h.bar)),
+	)
+}
+
 func (h *hello) Render() app.UI {
-	h.bar = "i am the baz"
 	return app.Div().Body(
+		h.helloComponent(),
 		app.H1().Body(app.Text(h.bar)),
 		app.H1().Body(
 			app.Text("Hello, "),
@@ -25,14 +42,6 @@ func (h *hello) Render() app.UI {
 			).Else(
 				app.Text("World!"),
 			),
-		),
-		app.P().Body(
-			app.Input().
-				Type("text").
-				Value(h.name).
-				Placeholder("What is your name?").
-				AutoFocus(true).
-				OnChange(h.ValueTo(&h.name)),
 		),
 	)
 }
