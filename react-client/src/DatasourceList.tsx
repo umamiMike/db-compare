@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { handleQuery } from './handlers'
 
 interface Props {
   creds: DatasourceCredentials;
@@ -7,7 +8,7 @@ interface Props {
 
 export default function DatasourceList(props: Props) {
   const { creds, onSubmit } = props;
-  const submitFormData = onSubmit;
+  const submitFormData = handleQuery;
   const [formdata, setFormData] = useState(creds);
 
   return (

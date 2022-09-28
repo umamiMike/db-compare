@@ -1,5 +1,5 @@
-import {api } from './api-client'
-export const handleQuery = () => {
+import { api } from './api-client'
+export const handleQuery = (query: any) => {
   console.log(query);
 
   fetch(api + '/queries', {
